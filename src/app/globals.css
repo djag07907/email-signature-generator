@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f5f7fa; /* A light gray for the white background */
+  --foreground: #333333; /* A dark gray for text */
+  --dark-background: #2c2f33; /* A modern dark tone for dark mode */
+  --dark-foreground: #f0f0f0; /* Light gray for dark mode text */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--dark-background);
+    --foreground: var(--dark-foreground);
+  }
+}
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+input,
+textarea {
+  border: 1px solid #d1d5db; /* Gray border */
+  background-color: #f3f4f6; /* Light gray background for inputs */
+  color: #4b5563; /* Dark gray for input text */
+}
+input:focus,
+textarea:focus {
+  border-color: #3b82f6; /* Blue border on focus */
+  outline: none;
+}
+::placeholder {
+  color: #6b7280; /* Dark gray for placeholders */
+}
+label {
+  color: #4b5563; /* Dark gray for labels */
+  font-weight: bold; /* Bold labels */
+}
