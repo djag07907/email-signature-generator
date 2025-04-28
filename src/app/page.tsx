@@ -60,39 +60,44 @@ export default function EmailSignatureGenerator() {
       }' /></a>`,
     };
     const html = `
-      <table style="font-family: Arial, sans-serif; color: #333;">
-        <tr>
-          <td style="padding-right: 16px;">
-            ${
-              imgSrc
-                ? `<img src="${imgSrc}" style="max-width: 80px; max-height: 80px; object-fit: cover; ${
-                    imgStyle === "circle" ? "border-radius: 50%;" : ""
-                  }" />`
-                : ""
-            }
-          </td>
-          <td>
-            <div style="font-weight: ${fontWeight}; font-size: 16px; color: ${fontColor};">${name}</div>
-            <div style="font-weight: ${fontWeight}; font-size: 14px; color: ${fontColor};">${position}</div>
-            ${divider}
-            <div style="margin: 6px 0; color: ${fontColor};">${phone} ${websites
-      .filter(Boolean)
-      .join(" ")}</div>
-            ${divider}
-            <div style="margin: 6px 0; color: ${fontColor};">${email}</div>
-            <div style="margin-top: 6px; display: flex; gap: 8px;">
-              ${Object.entries(socialIcons)
-                .map(([key, value]) =>
-                  socialLinks.some((social) => social.platform === key)
-                    ? value
-                    : ""
+    <table style="font-family: Arial, sans-serif; color: #333;">
+      <tr>
+        <td style="padding-right: 16px;">
+          ${
+            imgSrc
+              ? `<img src="${imgSrc}" style="max-width: 80px; max-height: 80px; object-fit: cover; ${
+                  imgStyle === "circle" ? "border-radius: 50%;" : ""
+                }" />`
+              : ""
+          }
+        </td>
+        <td>
+          <div style="font-weight: ${fontWeight}; font-size: 16px; color: ${fontColor};">${name}</div>
+          <div style="font-weight: ${fontWeight}; font-size: 14px; color: ${fontColor};">${position}</div>
+          ${divider}
+          <div style="margin: 6px 0; color: ${fontColor};">
+            ${websites
+              .filter(Boolean)
+              .map((website) => `<div>${website}</div>`)
+              .join("")}
+          </div>
+          ${divider}
+          <div style="margin: 6px 0; color: ${fontColor};">${phone} | ${email}</div>
+          <div style="margin-top: 6px; display: flex; gap: 8px;">
+            ${Object.entries(socialIcons)
+              .map(([key, value]) =>
+                socialLinks.some(
+                  (social) => social.platform === key && social.url
                 )
-                .join(" ")}
-            </div>
-          </td>
-        </tr>
-      </table>
-    `;
+                  ? value
+                  : ""
+              )
+              .join(" ")}
+          </div>
+        </td>
+      </tr>
+    </table>
+  `;
     setSignatureHtml(html);
   }, [
     dividerWidth,
@@ -150,11 +155,35 @@ export default function EmailSignatureGenerator() {
     setFontWeight("normal");
     setSignatureHtml("");
   };
-  const getSocialUrl = (platform: string) =>
-    socialLinks.find((social) => social.platform === platform)?.url || "";
+  const getSocialUrl = (platform: string) => {
+    if (platform === "WhatsApp") {
+      const sanitizedPhone = phone.replace(/\D/g, "");
+      return `https://api.whatsapp.com/send/?phone=${sanitizedPhone}&text&type=phone_number&app_absent=0`;
+    }
+    return (
+      socialLinks.find((social) => social.platform === platform)?.url || ""
+    );
+  };
+
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(signatureHtml);
+      const tempElement = document.createElement("div");
+      tempElement.innerHTML = signatureHtml;
+      document.body.appendChild(tempElement);
+      const range = document.createRange();
+      range.selectNodeContents(tempElement);
+      const selection = window.getSelection();
+
+      if (selection) {
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "text/html": new Blob([tempElement.innerHTML], { type: "text/html" }),
+        }),
+      ]);
+      document.body.removeChild(tempElement);
       alert("Signature copied to clipboard!");
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
@@ -225,6 +254,25 @@ export default function EmailSignatureGenerator() {
                       const value = element.target.value;
                       if (validatePhone(value) || value === "") {
                         setPhone(value);
+
+                        const sanitizedPhone = value.replace(/\D/g, "");
+                        const whatsappUrl = `https://api.whatsapp.com/send/?phone=${sanitizedPhone}&text&type=phone_number&app_absent=0`;
+
+                        const newSocialLinks = [...socialLinks];
+                        const index = newSocialLinks.findIndex(
+                          (social) => social.platform === "WhatsApp"
+                        );
+
+                        if (index > -1) {
+                          newSocialLinks[index].url = whatsappUrl;
+                        } else {
+                          newSocialLinks.push({
+                            platform: "WhatsApp",
+                            url: whatsappUrl,
+                          });
+                        }
+
+                        setSocialLinks(newSocialLinks);
                       }
                     }}
                     className="m-2 p-1 rounded-[10px]"
@@ -256,32 +304,34 @@ export default function EmailSignatureGenerator() {
                   + Add
                 </Button>
               </div>
-              {websites.map((website, index) => (
-                <div key={index} className="flex items-center mb-2">
-                  <Input
-                    placeholder="Website URL"
-                    value={website}
-                    onChange={(element) => {
-                      const value = element.target.value;
-                      const newWebsites = [...websites];
-                      newWebsites[index] = value;
-                      setWebsites(newWebsites);
-                    }}
-                    className="m-2 p-1 rounded-[10px]"
-                  />
-                  <Button
-                    onClick={() => {
-                      const newWebsites = websites.filter(
-                        (_, i) => i !== index
-                      );
-                      setWebsites(newWebsites);
-                    }}
-                    className="ml-2 text-amber-700"
-                  >
-                    Remove
-                  </Button>
-                </div>
-              ))}
+              <div className="flex flex-col">
+                {websites.map((website, index) => (
+                  <div key={index} className="flex items-center mb-2">
+                    <Input
+                      placeholder="Website URL"
+                      value={website}
+                      onChange={(element) => {
+                        const value = element.target.value;
+                        const newWebsites = [...websites];
+                        newWebsites[index] = value;
+                        setWebsites(newWebsites);
+                      }}
+                      className="m-2 p-1 rounded-[10px]"
+                    />
+                    <Button
+                      onClick={() => {
+                        const newWebsites = websites.filter(
+                          (_, i) => i !== index
+                        );
+                        setWebsites(newWebsites);
+                      }}
+                      className="ml-2 text-amber-700"
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="m-2 p-4 border border-gray-300 rounded">
               <Label>Styles</Label>
@@ -359,21 +409,29 @@ export default function EmailSignatureGenerator() {
                       className="mr-2"
                     />
                     <Input
-                      type="url"
+                      type="text"
                       placeholder={`${platform} URL`}
-                      value={getSocialUrl(platform)}
+                      value={
+                        platform === "WhatsApp"
+                          ? getSocialUrl(platform)
+                          : getSocialUrl(platform)
+                      }
                       onChange={(element) => {
                         const value = element.target.value;
+                        const sanitizedValue =
+                          platform === "WhatsApp"
+                            ? value.replace(/\D/g, "")
+                            : value;
                         const newSocialLinks = [...socialLinks];
                         const index = newSocialLinks.findIndex(
                           (social) => social.platform === platform
                         );
                         if (index > -1) {
-                          newSocialLinks[index].url = value;
+                          newSocialLinks[index].url = sanitizedValue;
                         } else {
                           newSocialLinks.push({
                             platform: platform as SocialLink["platform"],
-                            url: value,
+                            url: sanitizedValue,
                           });
                         }
                         setSocialLinks(newSocialLinks);
