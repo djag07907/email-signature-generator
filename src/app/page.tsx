@@ -5,6 +5,7 @@ import Button from "@/components/ui/button";
 import Card, { CardContent } from "@/components/ui/card";
 import Input from "@/components/ui/input";
 import Label from "@/components/ui/label";
+import SkeletonEmailSignature from "@/components/ui/skeleton";
 import Image from "next/image";
 import { useEffect, useCallback } from "react";
 
@@ -487,10 +488,14 @@ export default function EmailSignatureGenerator() {
           <CardContent>
             <div className="m-4">
               <Label>Live Preview</Label>
-              <div
-                className="border rounded p-2"
-                dangerouslySetInnerHTML={{ __html: signatureHtml }}
-              />
+              {signatureHtml ? (
+                <div
+                  className="border rounded p-2"
+                  dangerouslySetInnerHTML={{ __html: signatureHtml }}
+                />
+              ) : (
+                <SkeletonEmailSignature />
+              )}
             </div>
           </CardContent>
         </Card>

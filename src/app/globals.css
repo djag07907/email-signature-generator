@@ -43,3 +43,25 @@ label {
   color: #4b5563; /* Dark gray for labels */
   font-weight: bold; /* Bold labels */
 }
+
+/* styles.css or a relevant CSS file */
+.skeleton-line {
+  animation: pulse 1.5s infinite;
+}
+.skeleton-avatar {
+  animation: pulse 1.5s infinite;
+}
+.skeleton-social {
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0% {
+    background-color: #e0e0e0;
+  }
+  50% {
+    background-color: #d0d0d0;
+  }
+  100% {
+    background-color: #e0e0e0;
+  }
+}
