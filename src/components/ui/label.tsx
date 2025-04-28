@@ -5,10 +5,7 @@ const Label: React.FC<{ children: React.ReactNode; htmlFor?: string }> = ({
   htmlFor,
 }) => {
   return (
-    <label
-      className="block text-sm font-medium text-gray-300"
-      htmlFor={htmlFor}
-    >
+    <label className="block text-m font-medium text-gray-300" htmlFor={htmlFor}>
       {children}
     </label>
   );
