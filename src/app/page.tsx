@@ -59,45 +59,54 @@ export default function EmailSignatureGenerator() {
         imgStyle === "circle" ? "border-radius: 50%;" : ""
       }' /></a>`,
     };
+    const websitesHtml = websites
+      .filter(Boolean)
+      .map(
+        (website) =>
+          `<div style="margin: 6px 0; color: ${fontColor}; display: flex; align-items: center;">
+            <img src="/images/internet.png" style="width: 16px; margin-right: 4px;" />
+            <a href="${website}" target="_blank" rel="noopener noreferrer" style="color: ${fontColor}; text-decoration: none;">
+              ${website}
+            </a>
+          </div>`
+      )
+      .join("");
     const html = `
-    <table style="font-family: Arial, sans-serif; color: #333;">
-      <tr>
-        <td style="padding-right: 16px;">
-          ${
-            imgSrc
-              ? `<img src="${imgSrc}" style="max-width: 80px; max-height: 80px; object-fit: cover; ${
-                  imgStyle === "circle" ? "border-radius: 50%;" : ""
-                }" />`
-              : ""
-          }
-        </td>
-        <td>
-          <div style="font-weight: ${fontWeight}; font-size: 16px; color: ${fontColor};">${name}</div>
-          <div style="font-weight: ${fontWeight}; font-size: 14px; color: ${fontColor};">${position}</div>
-          ${divider}
-          <div style="margin: 6px 0; color: ${fontColor};">
-            ${websites
-              .filter(Boolean)
-              .map((website) => `<div>${website}</div>`)
-              .join("")}
-          </div>
-          ${divider}
-          <div style="margin: 6px 0; color: ${fontColor};">${phone} | ${email}</div>
-          <div style="margin-top: 6px; display: flex; gap: 8px;">
-            ${Object.entries(socialIcons)
-              .map(([key, value]) =>
-                socialLinks.some(
-                  (social) => social.platform === key && social.url
+      <table style="font-family: Arial, sans-serif; color: #333;">
+        <tr>
+          <td style="padding-right: 16px;">
+            ${
+              imgSrc
+                ? `<img src="${imgSrc}" style="max-width: 80px; max-height: 80px; object-fit: cover; ${
+                    imgStyle === "circle" ? "border-radius: 50%;" : ""
+                  }" />`
+                : ""
+            }
+          </td>
+          <td>
+            <div style="font-weight: ${fontWeight}; font-size: 16px; color: ${fontColor};">${name}</div>
+            <div style="font-weight: ${fontWeight}; font-size: 14px; color: ${fontColor};">${position}</div>
+            ${divider}
+            <div style="margin: 6px 0; color: ${fontColor};">
+              ${websitesHtml}
+            </div>
+            ${divider}
+            <div style="margin: 6px 0; color: ${fontColor};">${phone} | <a href="mailto:${email}" style="color: ${fontColor}; text-decoration: none;">${email}</a></div>
+            <div style="margin-top: 6px; display: flex; gap: 12px;">
+              ${Object.entries(socialIcons)
+                .map(([key, value]) =>
+                  socialLinks.some(
+                    (social) => social.platform === key && social.url
+                  )
+                    ? value
+                    : ""
                 )
-                  ? value
-                  : ""
-              )
-              .join(" ")}
-          </div>
-        </td>
-      </tr>
-    </table>
-  `;
+                .join(" ")}
+            </div>
+          </td>
+        </tr>
+      </table>
+    `;
     setSignatureHtml(html);
   }, [
     dividerWidth,
