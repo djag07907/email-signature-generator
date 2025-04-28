@@ -399,7 +399,7 @@ export default function EmailSignatureGenerator() {
             <div className="m-2 p-4 border border-gray-300 rounded">
               <Label>Social Links</Label>
               <div className="flex flex-col m-2 p-1">
-                {["LinkedIn", "GitHub", "WhatsApp"].map((platform) => (
+                {["LinkedIn", "GitHub"].map((platform) => (
                   <div key={platform} className="flex items-center mb-2">
                     <Image
                       src={getSocialIconUrl(platform)}
@@ -411,11 +411,7 @@ export default function EmailSignatureGenerator() {
                     <Input
                       type="text"
                       placeholder={`${platform} URL`}
-                      value={
-                        platform === "WhatsApp"
-                          ? getSocialUrl(platform)
-                          : getSocialUrl(platform)
-                      }
+                      value={getSocialUrl(platform)}
                       onChange={(element) => {
                         const value = element.target.value;
                         const sanitizedValue =
@@ -440,6 +436,21 @@ export default function EmailSignatureGenerator() {
                     />
                   </div>
                 ))}
+                <div className="flex items-center mb-2">
+                  <Image
+                    src={getSocialIconUrl("WhatsApp")}
+                    alt="WhatsApp"
+                    width={20}
+                    height={20}
+                    className="mr-2"
+                  />
+                  <Input
+                    type="text"
+                    value={`WhatsApp link to: ${phone} generated...`}
+                    readOnly
+                    className="flex-1 m-0 p-1 rounded-[10px] bg-gray-100 cursor-not-allowed"
+                  />
+                </div>
               </div>
             </div>
             <Input
