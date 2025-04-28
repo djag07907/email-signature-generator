@@ -6,6 +6,7 @@ import Card, { CardContent } from "@/components/ui/card";
 import Input from "@/components/ui/input";
 import Label from "@/components/ui/label";
 import Image from "next/image";
+import { useEffect, useCallback } from "react";
 
 interface SocialLink {
   platform: "LinkedIn" | "GitHub" | "WhatsApp";
@@ -39,7 +40,7 @@ export default function EmailSignatureGenerator() {
     signatureHtml,
     setSignatureHtml,
   } = useSignature();
-  const updateSignatureHtml = () => {
+  const updateSignatureHtml = useCallback(() => {
     const divider = `<div style="height: ${dividerWidth}; background-color: ${dividerColor}; width: 100%; margin: 6px 0"></div>`;
     const socialIcons = {
       LinkedIn: `<a href="${getSocialUrl(
@@ -74,7 +75,7 @@ export default function EmailSignatureGenerator() {
             <div style="font-weight: ${fontWeight}; font-size: 16px; color: ${fontColor};">${name}</div>
             <div style="font-weight: ${fontWeight}; font-size: 14px; color: ${fontColor};">${position}</div>
             ${divider}
-            <div style="margin: 6px 0; color: ${fontColor};">${phone}  ${websites
+            <div style="margin: 6px 0; color: ${fontColor};">${phone} ${websites
       .filter(Boolean)
       .join(" ")}</div>
             ${divider}
@@ -93,7 +94,37 @@ export default function EmailSignatureGenerator() {
       </table>
     `;
     setSignatureHtml(html);
-  };
+  }, [
+    dividerWidth,
+    dividerColor,
+    imgSrc,
+    imgStyle,
+    fontWeight,
+    fontColor,
+    name,
+    position,
+    phone,
+    websites,
+    email,
+    socialLinks,
+    setSignatureHtml,
+  ]);
+  useEffect(() => {
+    updateSignatureHtml();
+  }, [
+    name,
+    position,
+    phone,
+    websites,
+    email,
+    socialLinks,
+    imgSrc,
+    dividerColor,
+    dividerWidth,
+    fontColor,
+    fontWeight,
+    updateSignatureHtml,
+  ]);
   const handleImageUpload = (element: React.ChangeEvent<HTMLInputElement>) => {
     const file = element.target.files?.[0];
     if (file) {
@@ -104,6 +135,20 @@ export default function EmailSignatureGenerator() {
       };
       reader.readAsDataURL(file);
     }
+  };
+  const clearInputs = () => {
+    setName("");
+    setPosition("");
+    setPhone("");
+    setWebsites([""]);
+    setEmail("");
+    setSocialLinks([]);
+    setImgSrc(null);
+    setDividerColor("#ccc");
+    setDividerWidth("1");
+    setFontColor("#000000");
+    setFontWeight("normal");
+    setSignatureHtml("");
   };
   const getSocialUrl = (platform: string) =>
     socialLinks.find((social) => social.platform === platform)?.url || "";
@@ -128,11 +173,18 @@ export default function EmailSignatureGenerator() {
         return "";
     }
   };
+  const validateName = (value: string) => /^[a-zA-Z\s]*$/.test(value);
+  const validatePosition = (value: string) => /^[a-zA-Z\s]*$/.test(value);
+  const validatePhone = (value: string) => /^[0-9+]*$/.test(value);
+
   return (
     <div className="flex p-6 max-w-5xl mx-auto">
       <div className="w-4/6 pr-4">
         <Card>
           <CardContent>
+            <Button onClick={clearInputs} className="mb-4 text-red-500">
+              Clear
+            </Button>
             <div className="m-2 p-4 border border-gray-300 rounded">
               <Label>Personal Information</Label>
               <div className="grid grid-cols-2 gap-4">
@@ -142,10 +194,12 @@ export default function EmailSignatureGenerator() {
                     placeholder="Enter your name"
                     value={name}
                     onChange={(element) => {
-                      setName(element.target.value);
-                      updateSignatureHtml();
+                      const value = element.target.value;
+                      if (validateName(value) || value === "") {
+                        setName(value);
+                      }
                     }}
-                    className="m-2 p-1"
+                    className="m-2 p-1 rounded-[10px]"
                   />
                 </div>
                 <div>
@@ -154,10 +208,12 @@ export default function EmailSignatureGenerator() {
                     placeholder="Enter your position"
                     value={position}
                     onChange={(element) => {
-                      setPosition(element.target.value);
-                      updateSignatureHtml();
+                      const value = element.target.value;
+                      if (validatePosition(value) || value === "") {
+                        setPosition(value);
+                      }
                     }}
-                    className="m-2 p-1"
+                    className="m-2 p-1 rounded-[10px]"
                   />
                 </div>
                 <div>
@@ -166,10 +222,12 @@ export default function EmailSignatureGenerator() {
                     placeholder="Enter your phone number"
                     value={phone}
                     onChange={(element) => {
-                      setPhone(element.target.value);
-                      updateSignatureHtml();
+                      const value = element.target.value;
+                      if (validatePhone(value) || value === "") {
+                        setPhone(value);
+                      }
                     }}
-                    className="m-2 p-1"
+                    className="m-2 p-1 rounded-[10px]"
                   />
                 </div>
                 <div>
@@ -178,10 +236,10 @@ export default function EmailSignatureGenerator() {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(element) => {
-                      setEmail(element.target.value);
-                      updateSignatureHtml();
+                      const value = element.target.value;
+                      setEmail(value);
                     }}
-                    className="m-2 p-1"
+                    className="m-2 p-1 rounded-[10px]"
                   />
                 </div>
               </div>
@@ -192,7 +250,6 @@ export default function EmailSignatureGenerator() {
                 <Button
                   onClick={() => {
                     setWebsites([...websites, ""]);
-                    updateSignatureHtml();
                   }}
                   className="ml-2 text-blue-700"
                 >
@@ -205,12 +262,12 @@ export default function EmailSignatureGenerator() {
                     placeholder="Website URL"
                     value={website}
                     onChange={(element) => {
+                      const value = element.target.value;
                       const newWebsites = [...websites];
-                      newWebsites[index] = element.target.value;
+                      newWebsites[index] = value;
                       setWebsites(newWebsites);
-                      updateSignatureHtml();
                     }}
-                    className="m-2 p-1"
+                    className="m-2 p-1 rounded-[10px]"
                   />
                   <Button
                     onClick={() => {
@@ -218,7 +275,6 @@ export default function EmailSignatureGenerator() {
                         (_, i) => i !== index
                       );
                       setWebsites(newWebsites);
-                      updateSignatureHtml();
                     }}
                     className="ml-2 text-amber-700"
                   >
@@ -236,20 +292,22 @@ export default function EmailSignatureGenerator() {
                   value={dividerColor}
                   onChange={(element) => {
                     setDividerColor(element.target.value);
-                    updateSignatureHtml();
                   }}
                   className="w-16 mr-5"
                 />
                 <Label>Divider Width</Label>
                 <Input
-                  type="text"
-                  value={dividerWidth}
+                  type="number"
+                  value={dividerWidth.replace("px", "")}
                   onChange={(element) => {
-                    setDividerWidth(element.target.value);
-                    updateSignatureHtml();
+                    const value = element.target.value;
+                    if (!isNaN(Number(value)) && value !== "") {
+                      setDividerWidth(`${value}px`);
+                    }
                   }}
-                  className="w-20 m-2 p-1"
+                  className="w-20 m-2 p-1 rounded-[10px] border border-gray-400"
                 />
+                <span className="ml-2 text-gray-500">px</span>
               </div>
             </div>
             <div className="m-2 p-4 border border-gray-300 rounded">
@@ -262,7 +320,6 @@ export default function EmailSignatureGenerator() {
                     value={fontColor}
                     onChange={(element) => {
                       setFontColor(element.target.value);
-                      updateSignatureHtml();
                     }}
                     className="w-16"
                   />
@@ -273,13 +330,18 @@ export default function EmailSignatureGenerator() {
                     value={fontWeight}
                     onChange={(element) => {
                       setFontWeight(element.target.value);
-                      updateSignatureHtml();
                     }}
                     className="border border-gray-400 rounded-md p-2"
                   >
-                    <option value="normal">Normal</option>
-                    <option value="bold">Bold</option>
-                    <option value="bolder">Bolder</option>
+                    <option value="normal" className="text-black">
+                      Normal
+                    </option>
+                    <option value="bold" className="text-black">
+                      Bold
+                    </option>
+                    <option value="bolder" className="text-black">
+                      Bolder
+                    </option>
                   </select>
                 </div>
               </div>
@@ -301,22 +363,22 @@ export default function EmailSignatureGenerator() {
                       placeholder={`${platform} URL`}
                       value={getSocialUrl(platform)}
                       onChange={(element) => {
+                        const value = element.target.value;
                         const newSocialLinks = [...socialLinks];
                         const index = newSocialLinks.findIndex(
                           (social) => social.platform === platform
                         );
                         if (index > -1) {
-                          newSocialLinks[index].url = element.target.value;
+                          newSocialLinks[index].url = value;
                         } else {
                           newSocialLinks.push({
                             platform: platform as SocialLink["platform"],
-                            url: element.target.value,
+                            url: value,
                           });
                         }
                         setSocialLinks(newSocialLinks);
-                        updateSignatureHtml();
                       }}
-                      className="flex-1 m-0 p-1"
+                      className="flex-1 m-0 p-1 rounded-[10px]"
                     />
                   </div>
                 ))}

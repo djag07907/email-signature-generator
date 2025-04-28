@@ -5,7 +5,7 @@ const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = (
 ) => {
   return (
     <input
-      className="border border-gray-400 bg-gray-200 text-black rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-800"
+      className="border border-gray-400 bg-gray-200 text-black  rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-800"
       placeholder={props.placeholder}
       {...props}
     />
