@@ -91,7 +91,12 @@ export default function EmailSignatureGenerator() {
               ${websitesHtml}
             </div>
             ${divider}
-            <div style="margin: 6px 0; color: ${fontColor};">${phone} | <a href="mailto:${email}" style="color: ${fontColor}; text-decoration: none;">${email}</a></div>
+            <div style="margin: 6px 0; color: ${fontColor}; display: flex; align-items: center; gap: 6px">
+              <img src="/images/phone-call.png" style="width: 16px;" />
+              <span>${phone}</span>
+               <img src="/images/email.png" style="width: 16px; margin-left:10px;" />
+              <a href="mailto:${email}" style="color: ${fontColor}; text-decoration: none;">${email}</a>
+            </div>
             <div style="margin-top: 6px; display: flex; gap: 12px;">
               ${Object.entries(socialIcons)
                 .map(([key, value]) =>
