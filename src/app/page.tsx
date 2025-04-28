@@ -41,6 +41,46 @@ export default function EmailSignatureGenerator() {
     signatureHtml,
     setSignatureHtml,
   } = useSignature();
+  const getDefaultSignatureHtml = () => {
+    return `
+      <table style="font-family: Arial, sans-serif; color: #333;">
+        <tr>
+          <td style="padding-right: 16px;">
+            <img src="/images/user.png" style="max-width: 80px; max-height: 80px; object-fit: cover; border-radius: 50%;" />
+          </td>
+          <td>
+            <div style="font-weight: normal; font-size: 16px; color: #000000;">John Doe</div>
+            <div style="font-weight: normal; font-size: 14px; color: #000000;">IT Manager</div>
+            <div style="height: 1px; background-color: #ccc; width: 100%; margin: 6px 0"></div>
+            <div style="margin: 6px 0; color: #000000;">
+              <div style="margin: 6px 0; display: flex; align-items: center;">
+                <img src="/images/internet.png" style="width: 16px; margin-right: 4px;" />
+                <a href="#" style="color: #000000; text-decoration: none;">Website URL</a>
+              </div>
+            </div>
+            <div style="height: 1px; background-color: #ccc; width: 100%; margin: 6px 0"></div>
+            <div style="margin: 6px 0; color: #000000; display: flex; align-items: center; gap: 6px">
+              <img src="/images/phone-call.png" style="width: 16px;" />
+              <span>+50499999999</span>
+              <img src="/images/email.png" style="width: 16px; margin-left:10px;" />
+              <a href="mailto:email@example.com" style="color: #000000; text-decoration: none;">email@example.com</a>
+            </div>
+            <div style="margin-top: 6px; display: flex; gap: 12px;">
+              <a href="#" target="_blank" rel="noopener noreferrer">
+                <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" style="width: 20px;" />
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer">
+                <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" style="width: 20px;" />
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" style="width: 20px;" />
+              </a>
+            </div>
+          </td>
+        </tr>
+      </table>
+    `;
+  };
   const updateSignatureHtml = useCallback(() => {
     const divider = `<div style="height: ${dividerWidth}; background-color: ${dividerColor}; width: 100%; margin: 6px 0"></div>`;
     const socialIcons = {
@@ -130,7 +170,11 @@ export default function EmailSignatureGenerator() {
     setSignatureHtml,
   ]);
   useEffect(() => {
-    updateSignatureHtml();
+    if (signatureHtml) {
+      updateSignatureHtml();
+    } else {
+      setSignatureHtml(getDefaultSignatureHtml());
+    }
   }, [
     name,
     position,
