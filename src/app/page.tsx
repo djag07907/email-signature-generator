@@ -46,7 +46,7 @@ export default function EmailSignatureGenerator() {
       <table style="font-family: Arial, sans-serif; color: #333;">
         <tr>
           <td style="padding-right: 16px;">
-            <img src="/images/user.png" style="max-width: 80px; max-height: 80px; object-fit: cover; border-radius: 50%;" />
+            <img src="https://cdn-icons-png.flaticon.com/128/847/847969.png" style="max-width: 80px; max-height: 80px; object-fit: cover; border-radius: 50%;" />
           </td>
           <td>
             <div style="font-weight: normal; font-size: 16px; color: #000000;">John Doe</div>
@@ -54,15 +54,15 @@ export default function EmailSignatureGenerator() {
             <div style="height: 1px; background-color: #ccc; width: 100%; margin: 6px 0"></div>
             <div style="margin: 6px 0; color: #000000;">
               <div style="margin: 6px 0; display: flex; align-items: center;">
-                <img src="/images/internet.png" style="width: 16px; margin-right: 4px;" />
+                <img src="https://cdn-icons-png.flaticon.com/128/10453/10453141.png" style="width: 16px; margin-right: 4px;" />
                 <a href="#" style="color: #000000; text-decoration: none;">Website URL</a>
               </div>
             </div>
             <div style="height: 1px; background-color: #ccc; width: 100%; margin: 6px 0"></div>
             <div style="margin: 6px 0; color: #000000; display: flex; align-items: center; gap: 6px">
-              <img src="/images/phone-call.png" style="width: 16px;" />
+              <img src="https://cdn-icons-png.flaticon.com/128/3059/3059446.png" style="width: 16px;" />
               <span>+50499999999</span>
-              <img src="/images/email.png" style="width: 16px; margin-left:10px;" />
+              <img src="https://cdn-icons-png.flaticon.com/128/542/542689.png" style="width: 16px; margin-left:10px;" />
               <a href="mailto:email@example.com" style="color: #000000; text-decoration: none;">email@example.com</a>
             </div>
             <div style="margin-top: 6px; display: flex; gap: 12px;">
@@ -86,27 +86,32 @@ export default function EmailSignatureGenerator() {
     const socialIcons = {
       LinkedIn: `<a href="${getSocialUrl(
         "LinkedIn"
-      )}" target="_blank" rel="noopener noreferrer"><img src='https://cdn-icons-png.flaticon.com/512/174/174857.png' style='width: 20px; margin-right: 6px; ${
+      )}" target="_blank" rel="noopener noreferrer"><img src='${getSocialIconUrl(
+        "LinkedIn"
+      )}' style='width: 20px; margin-right: 6px; ${
         imgStyle === "circle" ? "border-radius: 50%;" : ""
       }' /></a>`,
       GitHub: `<a href="${getSocialUrl(
         "GitHub"
-      )}" target="_blank" rel="noopener noreferrer"><img src='https://cdn-icons-png.flaticon.com/512/25/25231.png' style='width: 20px; margin-right: 6px; ${
+      )}" target="_blank" rel="noopener noreferrer"><img src='${getSocialIconUrl(
+        "GitHub"
+      )}' style='width: 20px; margin-right: 6px; ${
         imgStyle === "circle" ? "border-radius: 50%;" : ""
       }' /></a>`,
       WhatsApp: `<a href="${getSocialUrl(
         "WhatsApp"
-      )}" target="_blank" rel="noopener noreferrer"><img src='https://cdn-icons-png.flaticon.com/512/733/733585.png' style='width: 20px; margin-right: 6px; ${
+      )}" target="_blank" rel="noopener noreferrer"><img src='${getSocialIconUrl(
+        "WhatsApp"
+      )}' style='width: 20px; margin-right: 6px; ${
         imgStyle === "circle" ? "border-radius: 50%;" : ""
       }' /></a>`,
     };
-
     const websitesHtml = websites
       .filter(Boolean)
       .map(
         (website) =>
           `<div style="margin: 6px 0; color: ${fontColor}; display: flex; align-items: center;">
-            <img src="/images/internet.png" style="width: 16px; margin-right: 4px;" />
+            <img src="https://cdn-icons-png.flaticon.com/128/10453/10453141.png" style="width: 16px; margin-right: 4px;" />
             <a href="${website}" target="_blank" rel="noopener noreferrer" style="color: ${fontColor}; text-decoration: none;">
               ${website}
             </a>
@@ -123,21 +128,30 @@ export default function EmailSignatureGenerator() {
                     imgStyle === "circle" ? "border-radius: 50%;" : ""
                   }" />`
                 : ""
+              // : `<img src=""https://cdn-icons-png.flaticon.com/128/847/847969.png" style="max-width: 80px; max-height: 80px; object-fit: cover; border-radius: 50%;" />`
             }
           </td>
           <td>
-            <div style="font-weight: ${fontWeight}; font-size: 16px; color: ${fontColor};">${name}</div>
-            <div style="font-weight: ${fontWeight}; font-size: 14px; color: ${fontColor};">${position}</div>
+            <div style="font-weight: ${fontWeight}; font-size: 16px; color: ${fontColor};">${
+      name || "John Doe"
+    }</div>
+            <div style="font-weight: ${fontWeight}; font-size: 14px; color: ${fontColor};">${
+      position || "IT Manager"
+    }</div>
             ${divider}
             <div style="margin: 6px 0; color: ${fontColor};">
               ${websitesHtml}
             </div>
             ${divider}
             <div style="margin: 6px 0; color: ${fontColor}; display: flex; align-items: center; gap: 6px">
-              <img src="/images/phone-call.png" style="width: 16px; margin-right: 6px;" />
-              <span>${phone}</span>
-              <img src="/images/email.png" style="width: 16px; margin-left: 10px; margin-right: 6px;" />
-              <a href="mailto:${email}" style="color: ${fontColor}; text-decoration: none;">${email}</a>
+              <img src="https://cdn-icons-png.flaticon.com/128/3059/3059446.png" style="width: 16px; margin-right: 6px;" />
+              <span>${phone || "+50499999999"}</span>
+              <img src="https://cdn-icons-png.flaticon.com/128/542/542689.png" style="width: 16px; margin-left: 10px; margin-right: 6px;" />
+              <a href="mailto:${
+                email || "email@example.com"
+              }" style="color: ${fontColor}; text-decoration: none;">${
+      email || "email@example.com"
+    }</a>
             </div>
             <div style="margin-top: 6px; display: flex; gap: 12px;">
               ${Object.entries(socialIcons)
