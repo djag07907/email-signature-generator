@@ -86,20 +86,21 @@ export default function EmailSignatureGenerator() {
     const socialIcons = {
       LinkedIn: `<a href="${getSocialUrl(
         "LinkedIn"
-      )}" target="_blank" rel="noopener noreferrer"><img src='https://cdn-icons-png.flaticon.com/512/174/174857.png' style='width: 20px; ${
+      )}" target="_blank" rel="noopener noreferrer"><img src='https://cdn-icons-png.flaticon.com/512/174/174857.png' style='width: 20px; margin-right: 6px; ${
         imgStyle === "circle" ? "border-radius: 50%;" : ""
       }' /></a>`,
       GitHub: `<a href="${getSocialUrl(
         "GitHub"
-      )}" target="_blank" rel="noopener noreferrer"><img src='https://cdn-icons-png.flaticon.com/512/25/25231.png' style='width: 20px; ${
+      )}" target="_blank" rel="noopener noreferrer"><img src='https://cdn-icons-png.flaticon.com/512/25/25231.png' style='width: 20px; margin-right: 6px; ${
         imgStyle === "circle" ? "border-radius: 50%;" : ""
       }' /></a>`,
       WhatsApp: `<a href="${getSocialUrl(
         "WhatsApp"
-      )}" target="_blank" rel="noopener noreferrer"><img src='https://cdn-icons-png.flaticon.com/512/733/733585.png' style='width: 20px; ${
+      )}" target="_blank" rel="noopener noreferrer"><img src='https://cdn-icons-png.flaticon.com/512/733/733585.png' style='width: 20px; margin-right: 6px; ${
         imgStyle === "circle" ? "border-radius: 50%;" : ""
       }' /></a>`,
     };
+
     const websitesHtml = websites
       .filter(Boolean)
       .map(
@@ -133,9 +134,9 @@ export default function EmailSignatureGenerator() {
             </div>
             ${divider}
             <div style="margin: 6px 0; color: ${fontColor}; display: flex; align-items: center; gap: 6px">
-              <img src="/images/phone-call.png" style="width: 16px;" />
+              <img src="/images/phone-call.png" style="width: 16px; margin-right: 6px;" />
               <span>${phone}</span>
-               <img src="/images/email.png" style="width: 16px; margin-left:10px;" />
+              <img src="/images/email.png" style="width: 16px; margin-left: 10px; margin-right: 6px;" />
               <a href="mailto:${email}" style="color: ${fontColor}; text-decoration: none;">${email}</a>
             </div>
             <div style="margin-top: 6px; display: flex; gap: 12px;">
