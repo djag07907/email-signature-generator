@@ -1,14 +1,32 @@
 "use client";
 
-import { UseFormReturn } from "react-hook-form";
-import { SignatureFormData } from "@/lib/schemas";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { SignatureFormData } from "@/lib/schemas";
 import { motion } from "framer-motion";
 import { Palette, Type, Minus } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { UseFormReturn } from "react-hook-form";
 
 interface StyleFormProps {
   form: UseFormReturn<SignatureFormData>;
@@ -73,7 +91,10 @@ export function StyleForm({ form }: StyleFormProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Font Weight</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select font weight" />
@@ -148,8 +169,10 @@ export function StyleForm({ form }: StyleFormProps) {
                           min="1"
                           max="10"
                           {...field}
-                          onChange={(e) => field.onChange(`${e.target.value}px`)}
-                          value={field.value.replace('px', '')}
+                          onChange={(e) =>
+                            field.onChange(`${e.target.value}px`)
+                          }
+                          value={field.value.replace("px", "")}
                           className="text-sm"
                         />
                       </FormControl>
@@ -159,38 +182,6 @@ export function StyleForm({ form }: StyleFormProps) {
                   </FormItem>
                 )}
               />
-            </div>
-          </div>
-
-          {/* Preview Section */}
-          <div className="p-4 border rounded-lg bg-muted/50">
-            <div className="text-sm font-medium mb-2">Style Preview</div>
-            <div className="space-y-2">
-              <div 
-                style={{ 
-                  color: form.watch("fontColor"),
-                  fontWeight: form.watch("fontWeight")
-                }}
-                className="text-lg"
-              >
-                Your Name Here
-              </div>
-              <div 
-                style={{ 
-                  height: form.watch("dividerWidth"),
-                  backgroundColor: form.watch("dividerColor"),
-                  width: "100%"
-                }}
-              />
-              <div 
-                style={{ 
-                  color: form.watch("fontColor"),
-                  fontWeight: form.watch("fontWeight")
-                }}
-                className="text-sm"
-              >
-                your.position@company.com
-              </div>
             </div>
           </div>
         </CardContent>

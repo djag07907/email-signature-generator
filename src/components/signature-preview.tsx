@@ -9,6 +9,15 @@ import { useState, useMemo } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
 import { FieldErrors } from "react-hook-form";
+import {
+  generateModernTemplate,
+  generateClassicTemplate,
+  generateMinimalTemplate,
+  generateCreativeTemplate,
+  generateProfessionalTemplate,
+  generateCorporateCleanTemplate,
+  generateCorporateBrandedTemplate,
+} from "@/lib/template-generators";
 
 interface SignaturePreviewProps {
   data: SignatureFormData;
@@ -60,63 +69,33 @@ export function SignaturePreview({ data, formErrors }: SignaturePreviewProps) {
   }, [data, formErrors]);
 
   const generateSignatureHtml = () => {
-    const divider = `<div style=\"height: ${data.dividerWidth}; background-color: ${data.dividerColor}; width: 100%; margin: 8px 0\"></div>`;
+    // Use corporate template if corporate mode is enabled
+    if (data.isCorporate && data.corporateTemplate) {
+      switch (data.corporateTemplate) {
+        case "corporate-clean":
+          return generateCorporateCleanTemplate(data);
+        case "corporate-branded":
+          return generateCorporateBrandedTemplate(data);
+        default:
+          return generateCorporateCleanTemplate(data);
+      }
+    }
     
-    const websitesHtml = data.websites?.filter(Boolean).map(website => 
-      `<div style=\"margin: 4px 0; color: ${data.fontColor}; display: flex; align-items: center;\">
-        <img src=\"https://cdn-icons-png.flaticon.com/128/10453/10453141.png\" style=\"width: 16px; margin-right: 6px;\" />
-        <a href=\"${website}\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: ${data.fontColor}; text-decoration: none;\">
-          ${website}
-        </a>
-      </div>`
-    ).join("") || "";
-
-    const socialLinksHtml = data.socialLinks?.filter(link => link.url).map(link =>
-      `<a href=\"${link.url}\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"margin-right: 12px;\">
-        <img src=\"${getSocialIconUrl(link.platform)}\" style=\"width: 20px; height: 20px;\" />
-      </a>`
-    ).join("") || "";
-
-    return `
-      <table style=\"font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; border-collapse: collapse; width: 100%; max-width: 600px;\">
-        <tr>
-          <td style=\"vertical-align: top; padding-right: 20px; width: 100px;\">
-            ${data.profileImage ? 
-              `<img src=\"${data.profileImage}\" style=\"width: 80px; height: 80px; object-fit: cover; border-radius: ${data.imgStyle === 'circle' ? '50%' : '8px'}; border: 2px solid #e5e7eb;\" />` :
-              `<div style=\"width: 80px; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: bold;\">
-                ${data.name ? data.name.charAt(0).toUpperCase() : 'A'}
-              </div>`
-            }
-          </td>
-          <td style=\"vertical-align: top; line-height: 1.4;\">
-            <div style=\"font-weight: ${data.fontWeight}; font-size: 18px; color: ${data.fontColor}; margin-bottom: 4px; line-height: 1.2;\">
-              ${data.name || 'Your Name'}
-            </div>
-            <div style=\"font-weight: ${data.fontWeight}; font-size: 14px; color: ${data.fontColor}; margin-bottom: 8px; opacity: 0.9;\">
-              ${data.position || 'Your Position'}
-            </div>
-            ${divider}
-            <div style=\"margin: 8px 0; color: ${data.fontColor}; line-height: 1.5;\">
-              ${websitesHtml}
-            </div>
-            ${websitesHtml ? divider : ''}
-            <div style=\"margin: 8px 0; color: ${data.fontColor};\">
-              <div style=\"display: flex; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap;\">
-                <img src=\"https://cdn-icons-png.flaticon.com/128/3059/3059446.png\" style=\"width: 16px; height: 16px; flex-shrink: 0;\" />
-                <span style=\"font-size: 14px; white-space: nowrap;\">${data.phone || '+1234567890'}</span>
-              </div>
-              <div style=\"display: flex; align-items: center; gap: 6px; flex-wrap: wrap;\">
-                <img src=\"https://cdn-icons-png.flaticon.com/128/542/542689.png\" style=\"width: 16px; height: 16px; flex-shrink: 0;\" />
-                <a href=\"mailto:${data.email || 'email@example.com'}\" style=\"color: ${data.fontColor}; text-decoration: none; font-size: 14px; word-break: break-all;\">
-                  ${data.email || 'email@example.com'}
-                </a>
-              </div>
-            </div>
-            ${socialLinksHtml && `<div style=\"margin-top: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;\">${socialLinksHtml}</div>`}
-          </td>
-        </tr>
-      </table>
-    `;
+    // Use base template based on selection
+    switch (data.selectedTemplate) {
+      case "modern":
+        return generateModernTemplate(data);
+      case "classic":
+        return generateClassicTemplate(data);
+      case "minimal":
+        return generateMinimalTemplate(data);
+      case "creative":
+        return generateCreativeTemplate(data);
+      case "professional":
+        return generateProfessionalTemplate(data);
+      default:
+        return generateModernTemplate(data);
+    }
   };
 
   const copyToClipboard = async () => {

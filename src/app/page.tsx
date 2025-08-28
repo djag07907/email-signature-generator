@@ -1,19 +1,20 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { signatureFormSchema, SignatureFormData } from "@/lib/schemas";
-import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { PersonalInfoForm } from "@/components/forms/personal-info-form";
-import { WebsitesForm } from "@/components/forms/websites-form";
 import { SocialLinksForm } from "@/components/forms/social-links-form";
 import { StyleForm } from "@/components/forms/style-form";
+import { TemplateSelector } from "@/components/forms/template-selector";
+import { WebsitesForm } from "@/components/forms/websites-form";
 import { SignaturePreview } from "@/components/signature-preview";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
+import { signatureFormSchema, SignatureFormData } from "@/lib/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { RotateCcw, Mail } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { useForm } from "react-hook-form";
 
 export default function EmailSignatureGenerator() {
   const form = useForm<SignatureFormData>({
@@ -24,8 +25,13 @@ export default function EmailSignatureGenerator() {
       email: "",
       phone: "",
       profileImage: "",
+      companyName: "",
+      companyLogo: "",
       websites: [],
       socialLinks: [],
+      selectedTemplate: "modern",
+      isCorporate: false,
+      corporateTemplate: "corporate-clean",
       fontColor: "#000000",
       fontWeight: "normal",
       dividerColor: "#cccccc",
@@ -48,7 +54,7 @@ export default function EmailSignatureGenerator() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <motion.header 
+      <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50"
@@ -91,15 +97,19 @@ export default function EmailSignatureGenerator() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Forms Column */}
               <div className="space-y-6">
+                <TemplateSelector form={form} />
                 <PersonalInfoForm form={form} />
                 <WebsitesForm form={form} />
                 <SocialLinksForm form={form} />
                 <StyleForm form={form} />
               </div>
-              
+
               {/* Preview Column - Now has equal width */}
               <div>
-                <SignaturePreview data={watchedData} formErrors={form.formState.errors} />
+                <SignaturePreview
+                  data={watchedData}
+                  formErrors={form.formState.errors}
+                />
               </div>
             </div>
           </form>
@@ -107,7 +117,7 @@ export default function EmailSignatureGenerator() {
       </div>
 
       {/* Footer */}
-      <motion.footer 
+      <motion.footer
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
@@ -120,7 +130,8 @@ export default function EmailSignatureGenerator() {
               Built with Next.js, shadcn/ui, and Tailwind CSS
             </p>
             <p className="text-xs text-muted-foreground">
-              Generate professional email signatures that work across all email clients
+              Generate professional email signatures that work across all email
+              clients
             </p>
           </div>
         </div>

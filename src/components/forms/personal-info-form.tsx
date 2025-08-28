@@ -7,7 +7,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Upload, X, User } from "lucide-react";
+import { Upload, X, User, Building2 } from "lucide-react";
 import { useState, useEffect } from "react";
 
 interface PersonalInfoFormProps {
@@ -16,6 +16,8 @@ interface PersonalInfoFormProps {
 
 export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
   const [imagePreview, setImagePreview] = useState<string>("");
+  const [logoPreview, setLogoPreview] = useState<string>("");
+  const isCorporate = form.watch("isCorporate");
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -33,6 +35,24 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
   const removeImage = () => {
     setImagePreview("");
     form.setValue("profileImage", "");
+  };
+
+  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result as string;
+        setLogoPreview(result);
+        form.setValue("companyLogo", result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeLogo = () => {
+    setLogoPreview("");
+    form.setValue("companyLogo", "");
   };
 
   // Watch for phone number changes and auto-update WhatsApp link
@@ -225,6 +245,108 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
               )}
             />
           </div>
+
+          {/* Corporate Information Section - Only show in corporate mode */}
+          {isCorporate && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-4 border-t pt-4"
+            >
+              <h4 className="font-semibold flex items-center gap-2 text-primary">
+                <Building2 className="w-4 h-4" />
+                Company Information
+              </h4>
+              
+              {/* Company Name */}
+              <FormField
+                control={form.control}
+                name="companyName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Company Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your company name"
+                        {...field}
+                        className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              {/* Company Logo Upload */}
+              <FormField
+                control={form.control}
+                name="companyLogo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2">
+                      <Building2 className="w-4 h-4" />
+                      Company Logo
+                    </FormLabel>
+                    <div className="flex items-center gap-4">
+                      {logoPreview || field.value ? (
+                        <div className="relative group">
+                          <div className="w-20 h-20 rounded-lg overflow-hidden border-2 border-muted bg-white p-2">
+                            <img
+                              src={logoPreview || field.value}
+                              alt="Company logo preview"
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
+                          <Button
+                            type="button"
+                            size="icon"
+                            variant="destructive"
+                            className="absolute -top-2 -right-2 w-6 h-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={removeLogo}
+                          >
+                            <X className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="w-20 h-20 rounded-lg border-2 border-dashed border-muted-foreground/25 flex items-center justify-center bg-muted/30">
+                          <Building2 className="w-8 h-8 text-muted-foreground/50" />
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <FormControl>
+                          <div className="space-y-2">
+                            <Input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleLogoUpload}
+                              className="hidden"
+                              id="logo-upload"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => document.getElementById('logo-upload')?.click()}
+                              className="flex items-center gap-2"
+                            >
+                              <Upload className="w-4 h-4" />
+                              {logoPreview || field.value ? 'Change Logo' : 'Upload Logo'}
+                            </Button>
+                            <p className="text-xs text-muted-foreground">
+                              Recommended: PNG/SVG with transparent background, max 2MB
+                            </p>
+                          </div>
+                        </FormControl>
+                      </div>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </motion.div>
+          )}
         </CardContent>
       </Card>
     </motion.div>
