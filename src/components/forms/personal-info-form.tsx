@@ -6,8 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { Upload, X, User, Building2 } from "lucide-react";
+import { Upload, X, User, Building2, MessageCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 
 interface PersonalInfoFormProps {
@@ -18,6 +20,7 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
   const [imagePreview, setImagePreview] = useState<string>("");
   const [logoPreview, setLogoPreview] = useState<string>("");
   const isCorporate = form.watch("isCorporate");
+  const usePhoneForWhatsapp = form.watch("usePhoneForWhatsapp");
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -55,19 +58,30 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
     form.setValue("companyLogo", "");
   };
 
-  // Watch for phone number changes and auto-update WhatsApp link
+  // Watch for phone number changes and WhatsApp settings
   useEffect(() => {
     const subscription = form.watch((value, { name }) => {
-      if (name === "phone" && value.phone) {
-        const sanitizedPhone = value.phone.replace(/\D/g, "");
-        if (sanitizedPhone) {
-          const whatsappUrl = `https://api.whatsapp.com/send/?phone=${sanitizedPhone}&text&type=phone_number&app_absent=0`;
-          
-          const currentSocialLinks = form.getValues("socialLinks") || [];
-          const whatsappIndex = currentSocialLinks.findIndex(
-            (link) => link.platform === "WhatsApp"
-          );
-          
+      if ((name === "phone" || name === "usePhoneForWhatsapp" || name === "whatsappManual") && value.phone) {
+        const currentSocialLinks = form.getValues("socialLinks") || [];
+        const whatsappIndex = currentSocialLinks.findIndex(
+          (link) => link.platform === "WhatsApp"
+        );
+        
+        let whatsappUrl = "";
+        
+        if (value.usePhoneForWhatsapp) {
+          const sanitizedPhone = value.phone.replace(/\D/g, "");
+          if (sanitizedPhone) {
+            whatsappUrl = `https://api.whatsapp.com/send/?phone=${sanitizedPhone}&text&type=phone_number&app_absent=0`;
+          }
+        } else {
+          const sanitizedManualPhone = (value.whatsappManual || "").replace(/\D/g, "");
+          if (sanitizedManualPhone) {
+            whatsappUrl = `https://api.whatsapp.com/send/?phone=${sanitizedManualPhone}&text&type=phone_number&app_absent=0`;
+          }
+        }
+        
+        if (whatsappUrl) {
           if (whatsappIndex > -1) {
             // Update existing WhatsApp link
             const updatedLinks = [...currentSocialLinks];
@@ -80,6 +94,11 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
               { platform: "WhatsApp", url: whatsappUrl }
             ]);
           }
+        } else if (whatsappIndex > -1) {
+          // Remove WhatsApp link if no valid number
+          const updatedLinks = [...currentSocialLinks];
+          updatedLinks.splice(whatsappIndex, 1);
+          form.setValue("socialLinks", updatedLinks);
         }
       }
     });
@@ -175,6 +194,79 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
                 </FormItem>
               )}
             />
+          </div>
+          
+          {/* WhatsApp Configuration Section */}
+          <div className="space-y-4 border-t pt-4">
+            <h4 className="font-semibold flex items-center gap-2 text-primary">
+              <MessageCircle className="w-4 h-4" />
+              WhatsApp Configuration
+            </h4>
+            
+            <div className="flex items-center justify-between p-4 border rounded-lg bg-muted/30">
+              <div className="space-y-1">
+                <FormField
+                  control={form.control}
+                  name="usePhoneForWhatsapp"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center space-x-2">
+                      <FormLabel className="flex items-center gap-2 font-medium">
+                        Use phone number for WhatsApp
+                      </FormLabel>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <p className="text-sm text-muted-foreground">
+                  {usePhoneForWhatsapp 
+                    ? "WhatsApp will use the phone number above" 
+                    : "Enter a different phone number for WhatsApp"}
+                </p>
+              </div>
+              {usePhoneForWhatsapp && (
+                <Badge variant="secondary" className="flex items-center gap-1">
+                  <MessageCircle className="w-3 h-3" />
+                  Auto-generated
+                </Badge>
+              )}
+            </div>
+            
+            {!usePhoneForWhatsapp && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <FormField
+                  control={form.control}
+                  name="whatsappManual"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>WhatsApp Phone Number</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="tel"
+                          placeholder="+1234567890"
+                          {...field}
+                          className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                      <p className="text-xs text-muted-foreground">
+                        This number will be used specifically for WhatsApp links
+                      </p>
+                    </FormItem>
+                  )}
+                />
+              </motion.div>
+            )}
           </div>
           
           {/* Profile Image Upload Section */}

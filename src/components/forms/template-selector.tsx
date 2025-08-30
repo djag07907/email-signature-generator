@@ -21,11 +21,11 @@ export function TemplateSelector({ form }: TemplateSelectorProps) {
   const corporateTemplate = form.watch("corporateTemplate");
 
   const handleTemplateSelect = (template: string) => {
-    form.setValue("selectedTemplate", template as any);
+    form.setValue("selectedTemplate", template as SignatureFormData["selectedTemplate"]);
   };
 
   const handleCorporateTemplateSelect = (template: string) => {
-    form.setValue("corporateTemplate", template as any);
+    form.setValue("corporateTemplate", template as SignatureFormData["corporateTemplate"]);
   };
 
   return (
@@ -79,15 +79,17 @@ export function TemplateSelector({ form }: TemplateSelectorProps) {
             )}
           </div>
 
-          {/* Base Templates */}
+          {/* Free Templates */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <h4 className="font-semibold">Base Templates</h4>
-              <Badge variant="outline">5 Templates</Badge>
+              <h4 className="font-semibold text-green-600">Free Templates</h4>
+              <Badge variant="secondary" className="bg-green-100 text-green-700">3 Free</Badge>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {Object.entries(templateTypes).map(([key, template]) => (
+              {Object.entries(templateTypes)
+                .filter(([, template]) => template.isFree)
+                .map(([key, template]) => (
                 <motion.div
                   key={key}
                   whileHover={{ scale: 1.02 }}
@@ -98,23 +100,74 @@ export function TemplateSelector({ form }: TemplateSelectorProps) {
                     variant="outline"
                     onClick={() => handleTemplateSelect(key)}
                     className={cn(
-                      "h-auto p-4 flex flex-col items-start gap-2 w-full transition-all duration-200",
+                      "h-auto p-4 flex flex-col items-start gap-3 w-full transition-all duration-200 min-h-[140px]",
                       selectedTemplate === key && !isCorporate
                         ? "border-primary bg-primary/5 ring-2 ring-primary/20"
                         : "hover:border-primary/50"
                     )}
                   >
                     <div className="flex items-center justify-between w-full">
-                      <h5 className="font-medium">{template.name}</h5>
-                      {selectedTemplate === key && !isCorporate && (
-                        <Badge className="text-xs">Selected</Badge>
-                      )}
+                      <h5 className="font-medium text-left leading-tight">{template.name}</h5>
+                      <div className="flex gap-2">
+                        <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">Free</Badge>
+                        {selectedTemplate === key && !isCorporate && (
+                          <Badge className="text-xs">Selected</Badge>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-sm text-muted-foreground text-left">
+                    <p className="text-sm text-muted-foreground text-left line-clamp-2 flex-1">
                       {template.description}
                     </p>
-                    <div className="w-full h-16 bg-gradient-to-br from-muted via-muted/50 to-background border rounded text-xs flex items-center justify-center">
-                      <Sparkles className="w-4 h-4 opacity-50" />
+                    <div className="w-full h-12 bg-gradient-to-br from-green-50 via-green-25 to-background border rounded text-xs flex items-center justify-center">
+                      <Sparkles className="w-4 h-4 opacity-50 text-green-600" />
+                    </div>
+                  </Button>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Premium Templates */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <h4 className="font-semibold">Premium Templates</h4>
+              <Badge variant="secondary">3 Premium</Badge>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Object.entries(templateTypes)
+                .filter(([, template]) => !template.isFree)
+                .map(([key, template]) => (
+                <motion.div
+                  key={key}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => handleTemplateSelect(key)}
+                    className={cn(
+                      "h-auto p-4 flex flex-col items-start gap-3 w-full transition-all duration-200 min-h-[140px]",
+                      selectedTemplate === key && !isCorporate
+                        ? "border-primary bg-primary/5 ring-2 ring-primary/20"
+                        : "hover:border-primary/50"
+                    )}
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <h5 className="font-medium text-left leading-tight">{template.name}</h5>
+                      <div className="flex gap-2">
+                        <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200">Premium</Badge>
+                        {selectedTemplate === key && !isCorporate && (
+                          <Badge className="text-xs">Selected</Badge>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground text-left line-clamp-2 flex-1">
+                      {template.description}
+                    </p>
+                    <div className="w-full h-12 bg-gradient-to-br from-amber-50 via-amber-25 to-background border rounded text-xs flex items-center justify-center">
+                      <Crown className="w-4 h-4 opacity-50 text-amber-600" />
                     </div>
                   </Button>
                 </motion.div>

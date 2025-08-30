@@ -18,22 +18,25 @@ import { useForm } from "react-hook-form";
 
 export default function EmailSignatureGenerator() {
   const form = useForm<SignatureFormData>({
-    resolver: zodResolver(signatureFormSchema),
+    resolver: zodResolver(signatureFormSchema) as any,
     defaultValues: {
       name: "",
       position: "",
       email: "",
       phone: "",
+      whatsappManual: "",
+      usePhoneForWhatsapp: true,
       profileImage: "",
       companyName: "",
       companyLogo: "",
       websites: [],
       socialLinks: [],
-      selectedTemplate: "modern",
+      selectedTemplate: "minimalist-white",
       isCorporate: false,
       corporateTemplate: "corporate-clean",
       fontColor: "#000000",
       fontWeight: "normal",
+      fontFamily: "Poppins",
       dividerColor: "#cccccc",
       dividerWidth: "1px",
       imgStyle: "circle",
@@ -97,11 +100,11 @@ export default function EmailSignatureGenerator() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Forms Column */}
               <div className="space-y-6">
-                <TemplateSelector form={form} />
-                <PersonalInfoForm form={form} />
-                <WebsitesForm form={form} />
-                <SocialLinksForm form={form} />
-                <StyleForm form={form} />
+                <TemplateSelector form={form as any} />
+                <PersonalInfoForm form={form as any} />
+                <WebsitesForm form={form as any} />
+                <SocialLinksForm form={form as any} />
+                <StyleForm form={form as any} />
               </div>
 
               {/* Preview Column - Now has equal width */}

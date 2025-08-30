@@ -56,7 +56,44 @@ export function StyleForm({ form }: StyleFormProps) {
               <Type className="w-4 h-4 text-muted-foreground" />
               <h4 className="text-sm font-semibold">Typography</h4>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <FormField
+                control={form.control}
+                name="fontFamily"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Font Family</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value || "Poppins"}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select font" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Poppins">
+                          <span style={{ fontFamily: 'Poppins' }}>Poppins</span>
+                        </SelectItem>
+                        <SelectItem value="Inter">
+                          <span style={{ fontFamily: 'Inter' }}>Inter</span>
+                        </SelectItem>
+                        <SelectItem value="Roboto">
+                          <span style={{ fontFamily: 'Roboto' }}>Roboto</span>
+                        </SelectItem>
+                        <SelectItem value="Open Sans">
+                          <span style={{ fontFamily: 'Open Sans' }}>Open Sans</span>
+                        </SelectItem>
+                        <SelectItem value="Source Sans Pro">
+                          <span style={{ fontFamily: 'Source Sans Pro' }}>Source Sans Pro</span>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="fontColor"

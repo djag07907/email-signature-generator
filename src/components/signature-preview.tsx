@@ -10,9 +10,10 @@ import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
 import { FieldErrors } from "react-hook-form";
 import {
+  generateMinimalistWhiteTemplate,
+  generateClassicLeftImageTemplate,
+  generateStackedCenteredTemplate,
   generateModernTemplate,
-  generateClassicTemplate,
-  generateMinimalTemplate,
   generateCreativeTemplate,
   generateProfessionalTemplate,
   generateCorporateCleanTemplate,
@@ -24,18 +25,6 @@ interface SignaturePreviewProps {
   formErrors?: FieldErrors<SignatureFormData>;
 }
 
-const getSocialIconUrl = (platform: string) => {
-  switch (platform) {
-    case "LinkedIn":
-      return "https://cdn-icons-png.flaticon.com/512/174/174857.png";
-    case "GitHub":
-      return "https://cdn-icons-png.flaticon.com/512/25/25231.png";
-    case "WhatsApp":
-      return "https://cdn-icons-png.flaticon.com/512/733/733585.png";
-    default:
-      return "";
-  }
-};
 
 export function SignaturePreview({ data, formErrors }: SignaturePreviewProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -83,18 +72,20 @@ export function SignaturePreview({ data, formErrors }: SignaturePreviewProps) {
     
     // Use base template based on selection
     switch (data.selectedTemplate) {
+      case "minimalist-white":
+        return generateMinimalistWhiteTemplate(data);
+      case "classic-left-image":
+        return generateClassicLeftImageTemplate(data);
+      case "stacked-centered":
+        return generateStackedCenteredTemplate(data);
       case "modern":
         return generateModernTemplate(data);
-      case "classic":
-        return generateClassicTemplate(data);
-      case "minimal":
-        return generateMinimalTemplate(data);
       case "creative":
         return generateCreativeTemplate(data);
       case "professional":
         return generateProfessionalTemplate(data);
       default:
-        return generateModernTemplate(data);
+        return generateMinimalistWhiteTemplate(data);
     }
   };
 
@@ -127,7 +118,7 @@ export function SignaturePreview({ data, formErrors }: SignaturePreviewProps) {
         title: "Success!",
         description: "Signature copied to clipboard",
       });
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to copy signature",

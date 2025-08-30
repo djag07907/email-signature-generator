@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const socialPlatforms = ["LinkedIn", "GitHub", "WhatsApp"] as const;
+export const socialPlatforms = ["LinkedIn", "GitHub", "WhatsApp", "Instagram", "YouTube", "Dribbble", "Behance"] as const;
 
 export const personalInfoSchema = z.object({
   name: z.string()
@@ -15,6 +15,8 @@ export const personalInfoSchema = z.object({
   phone: z.string()
     .min(1, "Phone number is required")
     .regex(/^[0-9+]*$/, "Phone number can only contain numbers and +"),
+  whatsappManual: z.string().optional(),
+  usePhoneForWhatsapp: z.boolean().default(true),
   profileImage: z.string().optional(),
   companyName: z.string().optional(),
   companyLogo: z.string().optional(),
@@ -34,7 +36,7 @@ export const socialLinksSchema = z.object({
 });
 
 export const templateSchema = z.object({
-  selectedTemplate: z.enum(["modern", "classic", "minimal", "creative", "professional"]),
+  selectedTemplate: z.enum(["minimalist-white", "classic-left-image", "stacked-centered", "modern", "creative", "professional"]),
   isCorporate: z.boolean(),
   corporateTemplate: z.enum(["corporate-clean", "corporate-branded"]).optional(),
 });
@@ -44,6 +46,7 @@ export const styleSchema = z.object({
   dividerWidth: z.string(),
   fontColor: z.string(),
   fontWeight: z.enum(["normal", "bold", "bolder"]),
+  fontFamily: z.enum(["Poppins", "Inter", "Roboto", "Open Sans", "Source Sans Pro"]).default("Poppins"),
   imgStyle: z.enum(["circle", "square"]).optional(),
 });
 
@@ -63,30 +66,47 @@ export type SignatureFormData = z.infer<typeof signatureFormSchema>;
 
 // Template definitions
 export const templateTypes = {
+  "minimalist-white": {
+    name: "Minimalist White",
+    description: "Clean text-focused design with small image accent",
+    preview: "minimalist-white-preview",
+    isFree: true,
+    maxSocialLinks: 3
+  },
+  "classic-left-image": {
+    name: "Classic Left-Image",
+    description: "Professional layout with photo/logo on left, details on right",
+    preview: "classic-left-image-preview",
+    isFree: true,
+    maxSocialLinks: 3
+  },
+  "stacked-centered": {
+    name: "Stacked Centered",
+    description: "Photo on top with centered information below",
+    preview: "stacked-centered-preview",
+    isFree: true,
+    maxSocialLinks: 3
+  },
   modern: {
     name: "Modern",
     description: "Clean and contemporary design with gradients",
-    preview: "modern-preview"
-  },
-  classic: {
-    name: "Classic",
-    description: "Traditional professional layout",
-    preview: "classic-preview"
-  },
-  minimal: {
-    name: "Minimal",
-    description: "Simple and elegant design",
-    preview: "minimal-preview"
+    preview: "modern-preview",
+    isFree: false,
+    maxSocialLinks: 10
   },
   creative: {
     name: "Creative",
     description: "Bold and artistic layout",
-    preview: "creative-preview"
+    preview: "creative-preview",
+    isFree: false,
+    maxSocialLinks: 10
   },
   professional: {
     name: "Professional",
     description: "Formal business style",
-    preview: "professional-preview"
+    preview: "professional-preview",
+    isFree: false,
+    maxSocialLinks: 10
   }
 } as const;
 

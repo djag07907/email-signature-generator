@@ -8,9 +8,175 @@ const getSocialIconUrl = (platform: string) => {
       return "https://cdn-icons-png.flaticon.com/512/25/25231.png";
     case "WhatsApp":
       return "https://cdn-icons-png.flaticon.com/512/733/733585.png";
+    case "Instagram":
+      return "https://cdn-icons-png.flaticon.com/512/174/174855.png";
+    case "YouTube":
+      return "https://cdn-icons-png.flaticon.com/512/174/174883.png";
+    case "Dribbble":
+      return "https://cdn-icons-png.flaticon.com/512/5968/5968756.png";
+    case "Behance":
+      return "https://cdn-icons-png.flaticon.com/512/174/174863.png";
     default:
       return "";
   }
+};
+
+// Free Templates
+export const generateMinimalistWhiteTemplate = (data: SignatureFormData): string => {
+  const fontFamily = data.fontFamily || 'Poppins';
+  const websitesHtml = data.websites?.filter(Boolean).slice(0, 2).map(website => 
+    `<div style="margin: 2px 0; font-size: 13px; color: ${data.fontColor};">
+      <a href="${website}" target="_blank" rel="noopener noreferrer" style="color: ${data.fontColor}; text-decoration: none;">
+        ${website.replace(/https?:\/\//, '')}
+      </a>
+    </div>`
+  ).join("") || "";
+
+  const socialLinksHtml = data.socialLinks?.filter(link => link.url).slice(0, 3).map(link =>
+    `<a href="${link.url}" target="_blank" rel="noopener noreferrer" style="margin-right: 10px; opacity: 0.8;">
+      <img src="${getSocialIconUrl(link.platform)}" style="width: 16px; height: 16px;" />
+    </a>`
+  ).join("") || "";
+
+  return `
+    <div style="font-family: '${fontFamily}', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: ${data.fontColor}; line-height: 1.5; max-width: 400px; background: white; padding: 16px; border: 1px solid #f0f0f0;">
+      <div style="display: flex; align-items: flex-start; gap: 12px;">
+        ${data.profileImage ? 
+          `<img src="${data.profileImage}" style="width: 50px; height: 50px; object-fit: cover; border-radius: ${data.imgStyle === 'circle' ? '50%' : '6px'}; flex-shrink: 0;" />` :
+          `<div style="width: 50px; height: 50px; background-color: ${data.fontColor}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: 600; flex-shrink: 0;">
+            ${data.name ? data.name.charAt(0).toUpperCase() : 'A'}
+          </div>`
+        }
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-weight: ${data.fontWeight === 'bold' ? '600' : '500'}; font-size: 16px; margin-bottom: 2px;">
+            ${data.name || 'Your Name'}
+          </div>
+          <div style="font-size: 13px; opacity: 0.7; margin-bottom: 8px;">
+            ${data.position || 'Your Position'}
+          </div>
+          <div style="font-size: 13px; line-height: 1.4;">
+            <div style="margin-bottom: 2px;">
+              <a href="tel:${data.phone}" style="color: ${data.fontColor}; text-decoration: none;">${data.phone || '+1234567890'}</a>
+            </div>
+            <div style="margin-bottom: 4px;">
+              <a href="mailto:${data.email || 'email@example.com'}" style="color: ${data.fontColor}; text-decoration: none;">
+                ${data.email || 'email@example.com'}
+              </a>
+            </div>
+            ${websitesHtml}
+          </div>
+          ${socialLinksHtml && `<div style="margin-top: 8px;">${socialLinksHtml}</div>`}
+        </div>
+      </div>
+    </div>
+  `;
+};
+
+
+export const generateClassicLeftImageTemplate = (data: SignatureFormData): string => {
+  const fontFamily = data.fontFamily || 'Poppins';
+  const websitesHtml = data.websites?.filter(Boolean).slice(0, 2).map(website => 
+    `<div style="margin: 3px 0; font-size: 13px; color: ${data.fontColor}; display: flex; align-items: center;">
+      <span style="margin-right: 6px; opacity: 0.6;">🔗</span>
+      <a href="${website}" target="_blank" rel="noopener noreferrer" style="color: ${data.fontColor}; text-decoration: none;">
+        ${website.replace(/https?:\/\//, '')}
+      </a>
+    </div>`
+  ).join("") || "";
+
+  const socialLinksHtml = data.socialLinks?.filter(link => link.url).slice(0, 3).map(link =>
+    `<a href="${link.url}" target="_blank" rel="noopener noreferrer" style="margin-right: 12px;">
+      <img src="${getSocialIconUrl(link.platform)}" style="width: 18px; height: 18px;" />
+    </a>`
+  ).join("") || "";
+
+  return `
+    <table style="font-family: '${fontFamily}', Arial, sans-serif; color: ${data.fontColor}; border-collapse: collapse; width: 100%; max-width: 500px; background: white;">
+      <tr>
+        <td style="vertical-align: top; padding-right: 20px; width: 90px;">
+          ${data.profileImage ? 
+            `<img src="${data.profileImage}" style="width: 75px; height: 75px; object-fit: cover; border-radius: ${data.imgStyle === 'circle' ? '50%' : '8px'}; border: 2px solid #e0e0e0;" />` :
+            `<div style="width: 75px; height: 75px; background-color: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: ${data.fontColor}; font-size: 24px; font-weight: bold;">
+              ${data.name ? data.name.charAt(0).toUpperCase() : 'A'}
+            </div>`
+          }
+        </td>
+        <td style="vertical-align: top; line-height: 1.5;">
+          <div style="font-weight: ${data.fontWeight === 'bold' ? '600' : '500'}; font-size: 18px; margin-bottom: 4px;">
+            ${data.name || 'Your Name'}
+          </div>
+          <div style="font-size: 14px; opacity: 0.8; margin-bottom: 12px;">
+            ${data.position || 'Your Position'}
+          </div>
+          <div style="font-size: 13px; line-height: 1.5;">
+            <div style="margin-bottom: 3px; display: flex; align-items: center;">
+              <span style="margin-right: 6px; opacity: 0.6;">📞</span>
+              <a href="tel:${data.phone}" style="color: ${data.fontColor}; text-decoration: none;">${data.phone || '+1234567890'}</a>
+            </div>
+            <div style="margin-bottom: 6px; display: flex; align-items: center;">
+              <span style="margin-right: 6px; opacity: 0.6;">✉️</span>
+              <a href="mailto:${data.email || 'email@example.com'}" style="color: ${data.fontColor}; text-decoration: none;">
+                ${data.email || 'email@example.com'}
+              </a>
+            </div>
+            ${websitesHtml}
+          </div>
+          ${socialLinksHtml && `<div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #f0f0f0;">${socialLinksHtml}</div>`}
+        </td>
+      </tr>
+    </table>
+  `;
+};
+
+export const generateStackedCenteredTemplate = (data: SignatureFormData): string => {
+  const fontFamily = data.fontFamily || 'Poppins';
+  const websitesHtml = data.websites?.filter(Boolean).slice(0, 2).map(website => 
+    `<a href="${website}" target="_blank" rel="noopener noreferrer" style="color: ${data.fontColor}; text-decoration: none; margin: 0 8px; font-size: 13px;">
+      ${website.replace(/https?:\/\//, '')}
+    </a>`
+  ).join("") || "";
+
+  const socialLinksHtml = data.socialLinks?.filter(link => link.url).slice(0, 3).map(link =>
+    `<a href="${link.url}" target="_blank" rel="noopener noreferrer" style="margin: 0 6px;">
+      <img src="${getSocialIconUrl(link.platform)}" style="width: 18px; height: 18px;" />
+    </a>`
+  ).join("") || "";
+
+  return `
+    <div style="font-family: '${fontFamily}', Arial, sans-serif; color: ${data.fontColor}; text-align: center; max-width: 350px; background: white; padding: 20px; border-radius: 8px; border: 1px solid #f0f0f0;">
+      <div style="margin-bottom: 16px;">
+        ${data.profileImage ? 
+          `<img src="${data.profileImage}" style="width: 80px; height: 80px; object-fit: cover; border-radius: ${data.imgStyle === 'circle' ? '50%' : '12px'}; border: 3px solid #f8f9fa; display: block; margin: 0 auto;" />` :
+          `<div style="width: 80px; height: 80px; background: linear-gradient(135deg, ${data.fontColor}, ${data.fontColor}80); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: bold; margin: 0 auto;">
+            ${data.name ? data.name.charAt(0).toUpperCase() : 'A'}
+          </div>`
+        }
+      </div>
+      
+      <div style="margin-bottom: 16px;">
+        <div style="font-weight: ${data.fontWeight === 'bold' ? '600' : '500'}; font-size: 20px; margin-bottom: 4px;">
+          ${data.name || 'Your Name'}
+        </div>
+        <div style="font-size: 14px; opacity: 0.8; margin-bottom: 12px;">
+          ${data.position || 'Your Position'}
+        </div>
+      </div>
+      
+      <div style="font-size: 13px; line-height: 1.6; margin-bottom: 12px;">
+        <div style="margin-bottom: 4px;">
+          <a href="tel:${data.phone}" style="color: ${data.fontColor}; text-decoration: none;">${data.phone || '+1234567890'}</a>
+        </div>
+        <div style="margin-bottom: 8px;">
+          <a href="mailto:${data.email || 'email@example.com'}" style="color: ${data.fontColor}; text-decoration: none;">
+            ${data.email || 'email@example.com'}
+          </a>
+        </div>
+        ${websitesHtml && `<div>${websitesHtml}</div>`}
+      </div>
+      
+      ${socialLinksHtml && `<div style="border-top: 1px solid #f0f0f0; padding-top: 12px;">${socialLinksHtml}</div>`}
+    </div>
+  `;
 };
 
 export const generateModernTemplate = (data: SignatureFormData): string => {

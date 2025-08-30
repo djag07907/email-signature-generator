@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, X, Share2, Linkedin, Github, MessageCircle } from "lucide-react";
+import { Plus, X, Share2, Linkedin, Github, MessageCircle, Instagram, Youtube, Palette, Dribbble } from "lucide-react";
 
 interface SocialLinksFormProps {
   form: UseFormReturn<SignatureFormData>;
@@ -22,6 +22,14 @@ const getPlatformIcon = (platform: string) => {
       return <Github className="w-4 h-4" />;
     case "WhatsApp":
       return <MessageCircle className="w-4 h-4" />;
+    case "Instagram":
+      return <Instagram className="w-4 h-4" />;
+    case "YouTube":
+      return <Youtube className="w-4 h-4" />;
+    case "Dribbble":
+      return <Dribbble className="w-4 h-4" />;
+    case "Behance":
+      return <Palette className="w-4 h-4" />;
     default:
       return <Share2 className="w-4 h-4" />;
   }
@@ -35,6 +43,14 @@ const getPlatformPlaceholder = (platform: string) => {
       return "https://github.com/yourusername";
     case "WhatsApp":
       return "https://wa.me/1234567890";
+    case "Instagram":
+      return "https://instagram.com/yourusername";
+    case "YouTube":
+      return "https://youtube.com/@yourchannel";
+    case "Dribbble":
+      return "https://dribbble.com/yourusername";
+    case "Behance":
+      return "https://behance.net/yourusername";
     default:
       return "https://";
   }

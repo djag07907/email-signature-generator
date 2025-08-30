@@ -1,6 +1,6 @@
 "use client";
 
-import { UseFormReturn, useFieldArray } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import { SignatureFormData } from "@/lib/schemas";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -14,10 +14,18 @@ interface WebsitesFormProps {
 }
 
 export function WebsitesForm({ form }: WebsitesFormProps) {
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "websites",
-  });
+  const websites = form.watch("websites") || [];
+  
+  const addWebsite = () => {
+    const currentWebsites = form.getValues("websites") || [];
+    form.setValue("websites", [...currentWebsites, ""]);
+  };
+  
+  const removeWebsite = (index: number) => {
+    const currentWebsites = form.getValues("websites") || [];
+    const newWebsites = currentWebsites.filter((_, i) => i !== index);
+    form.setValue("websites", newWebsites);
+  };
 
   return (
     <motion.div
@@ -38,13 +46,13 @@ export function WebsitesForm({ form }: WebsitesFormProps) {
         <CardContent className="space-y-4">
           <div className="flex justify-between items-center">
             <div className="text-sm text-muted-foreground">
-              {fields.length === 0 ? "No websites added" : `${fields.length} website(s) added`}
+              {websites.length === 0 ? "No websites added" : `${websites.length} website(s) added`}
             </div>
             <Button
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => append("")}
+              onClick={addWebsite}
               className="flex items-center gap-2 hover:bg-primary hover:text-primary-foreground transition-all duration-200 hover:scale-105 active:scale-95"
             >
               <Plus className="w-4 h-4" />
@@ -54,9 +62,9 @@ export function WebsitesForm({ form }: WebsitesFormProps) {
           
           <AnimatePresence>
             <div className="space-y-3">
-              {fields.map((field, index) => (
+              {websites.map((website, index) => (
                 <motion.div
-                  key={field.id}
+                  key={index}
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
@@ -84,7 +92,7 @@ export function WebsitesForm({ form }: WebsitesFormProps) {
                     type="button"
                     variant="outline"
                     size="icon"
-                    onClick={() => remove(index)}
+                    onClick={() => removeWebsite(index)}
                     className="hover:bg-destructive hover:text-destructive-foreground transition-colors"
                   >
                     <X className="w-4 h-4" />
@@ -94,7 +102,7 @@ export function WebsitesForm({ form }: WebsitesFormProps) {
             </div>
           </AnimatePresence>
 
-          {fields.length === 0 && (
+          {websites.length === 0 && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
