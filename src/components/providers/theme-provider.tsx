@@ -29,9 +29,9 @@ export function ThemeProvider({
   children,
   defaultTheme = "system",
   storageKey = "vite-ui-theme",
-  attribute = "class",
+  attribute = "class", // eslint-disable-line @typescript-eslint/no-unused-vars
   enableSystem = true,
-  disableTransitionOnChange = false,
+  disableTransitionOnChange = false, // eslint-disable-line @typescript-eslint/no-unused-vars
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme);

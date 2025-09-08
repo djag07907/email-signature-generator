@@ -110,7 +110,7 @@ export function WebsitesForm({ form }: WebsitesFormProps) {
             >
               <Globe className="w-12 h-12 mx-auto mb-2 opacity-50" />
               <p>No websites added yet</p>
-              <p className="text-sm">Click "Add Website" to get started</p>
+              <p className="text-sm">Click &quot;Add Website&quot; to get started</p>
             </motion.div>
           )}
         </CardContent>

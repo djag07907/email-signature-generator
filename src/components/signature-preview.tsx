@@ -202,7 +202,7 @@ export function SignaturePreview({ data, formErrors }: SignaturePreviewProps) {
           </div>
           
           <div className="text-xs text-muted-foreground space-y-1">
-            <p>💡 <strong>Tip:</strong> After copying, paste directly into your email client's signature settings.</p>
+            <p>💡 <strong>Tip:</strong> After copying, paste directly into your email client&apos;s signature settings.</p>
             <p>📧 Works with Gmail, Outlook, Apple Mail, and most email clients.</p>
           </div>
         </CardContent>
