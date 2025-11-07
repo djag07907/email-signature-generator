@@ -1,16 +1,16 @@
 "use client";
 
-import { UseFormReturn } from "react-hook-form";
-import { SignatureFormData } from "@/lib/schemas";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
+import { SignatureFormData } from "@/lib/schemas";
 import { motion } from "framer-motion";
 import { Upload, X, User, Building2, MessageCircle } from "lucide-react";
 import { useState, useEffect } from "react";
+import { UseFormReturn } from "react-hook-form";
 
 interface PersonalInfoFormProps {
   form: UseFormReturn<SignatureFormData>;
@@ -25,13 +25,55 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setImagePreview(result);
-        form.setValue("profileImage", result);
-      };
-      reader.readAsDataURL(file);
+      // Check file size (50KB max recommended for email signatures)
+      if (file.size > 50 * 1024) {
+        // Compress the image
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            // Set canvas size (max 150x150 for signatures)
+            const maxSize = 150;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+              if (width > maxSize) {
+                height *= maxSize / width;
+                width = maxSize;
+              }
+            } else {
+              if (height > maxSize) {
+                width *= maxSize / height;
+                height = maxSize;
+              }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            ctx?.drawImage(img, 0, 0, width, height);
+
+            // Compress to 0.7 quality JPEG
+            const compressedResult = canvas.toDataURL("image/jpeg", 0.7);
+            setImagePreview(compressedResult);
+            form.setValue("profileImage", compressedResult);
+          };
+          img.src = reader.result as string;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        // File is small enough, use as-is
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result as string;
+          setImagePreview(result);
+          form.setValue("profileImage", result);
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
 
@@ -43,13 +85,55 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setLogoPreview(result);
-        form.setValue("companyLogo", result);
-      };
-      reader.readAsDataURL(file);
+      // Check file size (50KB max recommended for email signatures)
+      if (file.size > 50 * 1024) {
+        // Compress the image
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            // Set canvas size (max 150x150 for logos)
+            const maxSize = 150;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+              if (width > maxSize) {
+                height *= maxSize / width;
+                width = maxSize;
+              }
+            } else {
+              if (height > maxSize) {
+                width *= maxSize / height;
+                height = maxSize;
+              }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            ctx?.drawImage(img, 0, 0, width, height);
+
+            // Compress to 0.7 quality JPEG
+            const compressedResult = canvas.toDataURL("image/jpeg", 0.7);
+            setLogoPreview(compressedResult);
+            form.setValue("companyLogo", compressedResult);
+          };
+          img.src = reader.result as string;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        // File is small enough, use as-is
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result as string;
+          setLogoPreview(result);
+          form.setValue("companyLogo", result);
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
 
@@ -61,14 +145,15 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
   // Watch for phone number changes and WhatsApp settings
   useEffect(() => {
     const subscription = form.watch((value, { name }) => {
-      if ((name === "phone" || name === "usePhoneForWhatsapp" || name === "whatsappManual") && value.phone) {
+      if (
+        (name === "phone" || name === "usePhoneForWhatsapp" || name === "whatsappManual") &&
+        value.phone
+      ) {
         const currentSocialLinks = form.getValues("socialLinks") || [];
-        const whatsappIndex = currentSocialLinks.findIndex(
-          (link) => link.platform === "WhatsApp"
-        );
-        
+        const whatsappIndex = currentSocialLinks.findIndex((link) => link.platform === "WhatsApp");
+
         let whatsappUrl = "";
-        
+
         if (value.usePhoneForWhatsapp) {
           const sanitizedPhone = value.phone.replace(/\D/g, "");
           if (sanitizedPhone) {
@@ -80,7 +165,7 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
             whatsappUrl = `https://api.whatsapp.com/send/?phone=${sanitizedManualPhone}&text&type=phone_number&app_absent=0`;
           }
         }
-        
+
         if (whatsappUrl) {
           if (whatsappIndex > -1) {
             // Update existing WhatsApp link
@@ -91,7 +176,7 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
             // Add new WhatsApp link
             form.setValue("socialLinks", [
               ...currentSocialLinks,
-              { platform: "WhatsApp", url: whatsappUrl }
+              { platform: "WhatsApp", url: whatsappUrl },
             ]);
           }
         } else if (whatsappIndex > -1) {
@@ -102,7 +187,7 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
         }
       }
     });
-    
+
     return () => subscription.unsubscribe();
   }, [form]);
 
@@ -118,9 +203,7 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
             <span className="text-primary">👤</span>
             Personal Information
           </CardTitle>
-          <CardDescription>
-            Enter your basic contact information for the signature
-          </CardDescription>
+          <CardDescription>Enter your basic contact information for the signature</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -195,14 +278,14 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
               )}
             />
           </div>
-          
+
           {/* WhatsApp Configuration Section */}
           <div className="space-y-4 border-t pt-4">
             <h4 className="font-semibold flex items-center gap-2 text-primary">
               <MessageCircle className="w-4 h-4" />
               WhatsApp Configuration
             </h4>
-            
+
             <div className="flex items-center justify-between p-4 border rounded-lg bg-muted/30">
               <div className="space-y-1">
                 <FormField
@@ -214,18 +297,15 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
                         Use phone number for WhatsApp
                       </FormLabel>
                       <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
+                        <Switch checked={field.value} onCheckedChange={field.onChange} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <p className="text-sm text-muted-foreground">
-                  {usePhoneForWhatsapp 
-                    ? "WhatsApp will use the phone number above" 
+                  {usePhoneForWhatsapp
+                    ? "WhatsApp will use the phone number above"
                     : "Enter a different phone number for WhatsApp"}
                 </p>
               </div>
@@ -236,7 +316,7 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
                 </Badge>
               )}
             </div>
-            
+
             {!usePhoneForWhatsapp && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
@@ -268,7 +348,7 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
               </motion.div>
             )}
           </div>
-          
+
           {/* Profile Image Upload Section */}
           <div className="space-y-4">
             <FormField
@@ -319,14 +399,14 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
                             type="button"
                             variant="outline"
                             size="sm"
-                            onClick={() => document.getElementById('image-upload')?.click()}
+                            onClick={() => document.getElementById("image-upload")?.click()}
                             className="flex items-center gap-2"
                           >
                             <Upload className="w-4 h-4" />
-                            {imagePreview || field.value ? 'Change Image' : 'Upload Image'}
+                            {imagePreview || field.value ? "Change Image" : "Upload Image"}
                           </Button>
                           <p className="text-xs text-muted-foreground">
-                            Recommended: Square image, max 2MB
+                            Images will be automatically compressed for email compatibility
                           </p>
                         </div>
                       </FormControl>
@@ -351,7 +431,7 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
                 <Building2 className="w-4 h-4" />
                 Company Information
               </h4>
-              
+
               {/* Company Name */}
               <FormField
                 control={form.control}
@@ -370,7 +450,7 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
                   </FormItem>
                 )}
               />
-              
+
               {/* Company Logo Upload */}
               <FormField
                 control={form.control}
@@ -420,14 +500,14 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
                               type="button"
                               variant="outline"
                               size="sm"
-                              onClick={() => document.getElementById('logo-upload')?.click()}
+                              onClick={() => document.getElementById("logo-upload")?.click()}
                               className="flex items-center gap-2"
                             >
                               <Upload className="w-4 h-4" />
-                              {logoPreview || field.value ? 'Change Logo' : 'Upload Logo'}
+                              {logoPreview || field.value ? "Change Logo" : "Upload Logo"}
                             </Button>
                             <p className="text-xs text-muted-foreground">
-                              Recommended: PNG/SVG with transparent background, max 2MB
+                              Images will be automatically compressed for email compatibility
                             </p>
                           </div>
                         </FormControl>
