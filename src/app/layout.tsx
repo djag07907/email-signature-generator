@@ -4,13 +4,9 @@ import "./globals.css";
 import { SignatureProvider } from "@/components/context/signature-context";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { cn } from "@/lib/utils";
-import { Inter, Poppins, Roboto, Open_Sans, Source_Sans_3 } from "next/font/google";
+import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
-const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
-const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
-const openSans = Open_Sans({ subsets: ["latin"] });
-const sourceSans = Source_Sans_3({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,

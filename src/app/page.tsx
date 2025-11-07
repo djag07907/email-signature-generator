@@ -31,21 +31,21 @@ export default function EmailSignatureGenerator() {
       companyLogo: "",
       websites: [],
       socialLinks: [],
-      selectedTemplate: "minimalist-white",
+      selectedTemplate: "minimalist-white" as const,
       isCorporate: false,
-      corporateTemplate: "corporate-clean",
+      corporateTemplate: "corporate-clean" as const,
       fontColor: "#000000",
-      fontWeight: "normal",
-      fontFamily: "Poppins",
+      fontWeight: "normal" as const,
+      fontFamily: "Poppins" as const,
       dividerColor: "#cccccc",
       dividerWidth: "1px",
-      imgStyle: "circle",
+      imgStyle: "circle" as const,
     },
     mode: "onChange",
   });
 
   const onSubmit = (data: SignatureFormData) => {
-    console.log("Form data:", data);
+    // Form submission handler
   };
 
   const resetForm = () => {
@@ -100,19 +100,16 @@ export default function EmailSignatureGenerator() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Forms Column */}
               <div className="space-y-6">
-                <TemplateSelector form={form as any} />
-                <PersonalInfoForm form={form as any} />
-                <WebsitesForm form={form as any} />
-                <SocialLinksForm form={form as any} />
-                <StyleForm form={form as any} />
+                <TemplateSelector form={form} />
+                <PersonalInfoForm form={form} />
+                <WebsitesForm form={form} />
+                <SocialLinksForm form={form} />
+                <StyleForm form={form} />
               </div>
 
               {/* Preview Column - Now has equal width */}
               <div>
-                <SignaturePreview
-                  data={watchedData}
-                  formErrors={form.formState.errors}
-                />
+                <SignaturePreview data={watchedData} formErrors={form.formState.errors} />
               </div>
             </div>
           </form>
@@ -133,8 +130,7 @@ export default function EmailSignatureGenerator() {
               Built with Next.js, shadcn/ui, and Tailwind CSS
             </p>
             <p className="text-xs text-muted-foreground">
-              Generate professional email signatures that work across all email
-              clients
+              Generate professional email signatures that work across all email clients
             </p>
           </div>
         </div>

@@ -304,7 +304,7 @@ export const generateModernTemplate = (data: SignatureFormData): string => {
     data.email
   }" style="color:${fc};text-decoration:none;font-size:14px">${data.email || ""}</a></div></div>${
     s ? `<div style="margin-top:12px;display:flex;align-items:center;gap:8px">${s}</div>` : ""
-  }</td></tr></table>`;
+  }</td></tr></table><p><br></p>`;
 };
 
 export const generateClassicTemplate = (data: SignatureFormData): string => {

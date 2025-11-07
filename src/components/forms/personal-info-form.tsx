@@ -364,6 +364,7 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
                     {imagePreview || field.value ? (
                       <div className="relative group">
                         <div className="w-20 h-20 rounded-lg overflow-hidden border-2 border-muted">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={imagePreview || field.value}
                             alt="Profile preview"
@@ -465,6 +466,7 @@ export function PersonalInfoForm({ form }: PersonalInfoFormProps) {
                       {logoPreview || field.value ? (
                         <div className="relative group">
                           <div className="w-20 h-20 rounded-lg overflow-hidden border-2 border-muted bg-white p-2">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={logoPreview || field.value}
                               alt="Company logo preview"
