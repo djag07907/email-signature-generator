@@ -284,11 +284,11 @@ export const generateModernTemplate = (data: SignatureFormData): string => {
       )
       .join("") || "";
   const img = data.profileImage
-    ? `<img src="${
-        data.profileImage
-      }" style="width:80px;height:80px;object-fit:cover;border-radius:${
+    ? `<div style="width:80px;height:80px;min-width:80px;min-height:80px;overflow:hidden;border-radius:${
         data.imgStyle === "circle" ? "50%" : "8px"
-      };border:3px solid ${fc};display:block"/>`
+      };border:3px solid ${fc}"><img src="${
+        data.profileImage
+      }" style="width:100%;height:100%;object-fit:cover;display:block"/></div>`
     : `<div style="width:80px;height:80px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:bold">${
         data.name ? data.name[0].toUpperCase() : "A"
       }</div>`;
