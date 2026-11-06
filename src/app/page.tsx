@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 
 export default function EmailSignatureGenerator() {
   const form = useForm<SignatureFormData>({
-    resolver: zodResolver(signatureFormSchema) as any,
+    resolver: zodResolver(signatureFormSchema) as never,
     defaultValues: {
       name: "",
       position: "",
@@ -36,15 +36,21 @@ export default function EmailSignatureGenerator() {
       corporateTemplate: "corporate-clean" as const,
       fontColor: "#000000",
       fontWeight: "normal" as const,
-      fontFamily: "Poppins" as const,
-      dividerColor: "#cccccc",
-      dividerWidth: "1px",
+      fontFamily: "Default" as const,
+      dividerColor: "",
+      nameColor: "",
+      textColor: "",
+      mutedColor: "",
+      backgroundColor: "",
+      borderColor: "",
+      borderWidth: "",
+      dividerWidth: "",
       imgStyle: "circle" as const,
     },
     mode: "onChange",
   });
 
-  const onSubmit = (data: SignatureFormData) => {
+  const onSubmit = (_data: SignatureFormData) => {
     // Form submission handler
   };
 
