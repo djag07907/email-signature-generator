@@ -38,10 +38,12 @@ export const socialLinksSchema = z.object({
 export const templateSchema = z.object({
   selectedTemplate: z.enum([
     "minimalist-white", "classic-left-image", "stacked-centered", "accent-bar", "compact-line", "soft-card",
+    "two-column", "underline-accent", "monogram-tile", "serif-classic",
     "modern", "creative", "professional", "executive-dark",
+    "gradient-edge", "pill-header", "midnight-split", "duo-tone",
   ]),
   isCorporate: z.boolean(),
-  corporateTemplate: z.enum(["corporate-clean", "corporate-branded", "corporate-split", "corporate-executive"]).optional(),
+  corporateTemplate: z.enum(["corporate-clean", "corporate-branded", "corporate-split", "corporate-executive", "corporate-stacked", "corporate-card"]).optional(),
 });
 
 export const styleSchema = z.object({
@@ -111,6 +113,34 @@ export const templateTypes = {
     isFree: true,
     maxSocialLinks: 3
   },
+  "two-column": {
+    name: "Two Column",
+    description: "Name and role on the left, contact details on the right",
+    preview: "two-column-preview",
+    isFree: true,
+    maxSocialLinks: 3
+  },
+  "underline-accent": {
+    name: "Underline Accent",
+    description: "Name and photo header with a bold accent underline",
+    preview: "underline-accent-preview",
+    isFree: true,
+    maxSocialLinks: 3
+  },
+  "monogram-tile": {
+    name: "Monogram Tile",
+    description: "Rounded monogram or photo tile with compact details",
+    preview: "monogram-tile-preview",
+    isFree: true,
+    maxSocialLinks: 3
+  },
+  "serif-classic": {
+    name: "Serif Classic",
+    description: "Elegant serif typography framed by fine rules",
+    preview: "serif-classic-preview",
+    isFree: true,
+    maxSocialLinks: 3
+  },
   modern: {
     name: "Modern",
     description: "Photo ring, gradient divider and icon-led contact details",
@@ -138,6 +168,34 @@ export const templateTypes = {
     preview: "executive-dark-preview",
     isFree: false,
     maxSocialLinks: 6
+  },
+  "gradient-edge": {
+    name: "Gradient Edge",
+    description: "Gradient top edge with a two-column contact grid",
+    preview: "gradient-edge-preview",
+    isFree: false,
+    maxSocialLinks: 6
+  },
+  "pill-header": {
+    name: "Pill Header",
+    description: "Photo header with a role pill and soft social badges",
+    preview: "pill-header-preview",
+    isFree: false,
+    maxSocialLinks: 6
+  },
+  "midnight-split": {
+    name: "Midnight Split",
+    description: "Dark identity panel beside crisp white contact details",
+    preview: "midnight-split-preview",
+    isFree: false,
+    maxSocialLinks: 6
+  },
+  "duo-tone": {
+    name: "Duo Tone",
+    description: "Tinted identity panel paired with a clean contact panel",
+    preview: "duo-tone-preview",
+    isFree: false,
+    maxSocialLinks: 6
   }
 } as const;
 
@@ -161,5 +219,15 @@ export const corporateTemplateTypes = {
     name: "Corporate Executive",
     description: "Executive layout with a branded footer bar and social badges",
     preview: "corporate-executive-preview"
+  },
+  "corporate-stacked": {
+    name: "Corporate Stacked",
+    description: "Centered logo over a refined, balanced personal block",
+    preview: "corporate-stacked-preview"
+  },
+  "corporate-card": {
+    name: "Corporate Card",
+    description: "Header card with logo, contact grid and branded footer strip",
+    preview: "corporate-card-preview"
   }
 } as const;

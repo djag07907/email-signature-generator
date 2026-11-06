@@ -20,6 +20,16 @@ import {
   generateCompactLineTemplate,
   generateSoftCardTemplate,
   generateExecutiveDarkTemplate,
+  generateTwoColumnTemplate,
+  generateUnderlineAccentTemplate,
+  generateMonogramTileTemplate,
+  generateSerifClassicTemplate,
+  generateGradientEdgeTemplate,
+  generatePillHeaderTemplate,
+  generateMidnightSplitTemplate,
+  generateDuoToneTemplate,
+  generateCorporateStackedTemplate,
+  generateCorporateCardTemplate,
   generateCorporateCleanTemplate,
   generateCorporateBrandedTemplate,
   generateCorporateSplitTemplate,
@@ -75,6 +85,10 @@ export function SignaturePreview({ data, formErrors }: SignaturePreviewProps) {
           return generateCorporateSplitTemplate(data);
         case "corporate-executive":
           return generateCorporateExecutiveTemplate(data);
+        case "corporate-stacked":
+          return generateCorporateStackedTemplate(data);
+        case "corporate-card":
+          return generateCorporateCardTemplate(data);
         default:
           return generateCorporateCleanTemplate(data);
       }
@@ -96,6 +110,22 @@ export function SignaturePreview({ data, formErrors }: SignaturePreviewProps) {
         return generateSoftCardTemplate(data);
       case "executive-dark":
         return generateExecutiveDarkTemplate(data);
+      case "two-column":
+        return generateTwoColumnTemplate(data);
+      case "underline-accent":
+        return generateUnderlineAccentTemplate(data);
+      case "monogram-tile":
+        return generateMonogramTileTemplate(data);
+      case "serif-classic":
+        return generateSerifClassicTemplate(data);
+      case "gradient-edge":
+        return generateGradientEdgeTemplate(data);
+      case "pill-header":
+        return generatePillHeaderTemplate(data);
+      case "midnight-split":
+        return generateMidnightSplitTemplate(data);
+      case "duo-tone":
+        return generateDuoToneTemplate(data);
       case "modern":
         return generateModernTemplate(data);
       case "creative":

@@ -675,3 +675,237 @@ export const generateCorporateExecutiveTemplate = (data: SignatureFormData): str
       </td></tr>`
   );
 };
+
+/* -------------------------------------------------------------------------- */
+/*  EXTRA FREE TEMPLATES                                                       */
+/* -------------------------------------------------------------------------- */
+
+const tile = (c: Ctx, size: number) => {
+  if (c.img) {
+    return `<img src="${esc(c.img)}" width="${size}" height="${size}" alt="${c.name}" style="display:block;width:${size}px;height:${size}px;min-width:${size}px;object-fit:cover;border-radius:16px;border:0">`;
+  }
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="${size}" height="${size}" align="center" valign="middle" bgcolor="${c.accent}" style="width:${size}px;height:${size}px;background:${c.accent};border-radius:16px;color:${c.onAccent};font-size:${Math.round(size * 0.44)}px;font-weight:700;line-height:${size}px;text-align:center;letter-spacing:-1px">${c.initial}</td></tr></table>`;
+};
+
+export const generateTwoColumnTemplate = (data: SignatureFormData): string => {
+  const c = ctx(data);
+  const social = socialIcons(c, 16, 9, 3);
+  return root(
+    c,
+    `<tr>
+      <td valign="top" style="padding:2px 24px 2px 0;border-right:${c.lineW} solid ${c.line}">
+        ${c.img ? `<div style="margin-bottom:10px">${avatar(c, 52)}</div>` : ""}
+        ${nameEl(c, 19)}
+        <div style="font-size:12.5px;color:${c.muted};margin-top:3px">${c.position}</div>
+        ${social ? `<div style="margin-top:12px">${social}</div>` : ""}
+      </td>
+      <td valign="middle" style="padding:2px 0 2px 24px">${labelRows(c, 2)}</td>
+    </tr>`
+  );
+};
+
+export const generateUnderlineAccentTemplate = (data: SignatureFormData): string => {
+  const c = ctx(data);
+  const sites = c.siteLs.slice(0, 2).join(dot(c.line));
+  const social = socialIcons(c, 16, 9, 3);
+  return root(
+    c,
+    `<tr>
+      <td valign="middle" style="padding:0 24px 12px 0">
+        ${nameEl(c, 21)}
+        <div style="font-size:12px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:${c.muted};margin-top:4px">${c.position}</div>
+      </td>
+      <td valign="middle" align="right" style="padding:0 0 12px">${avatar(c, 58)}</td>
+    </tr>
+    <tr><td colspan="2" style="border-top:3px solid ${c.accent};padding-top:11px">
+      <div style="font-size:12.5px">${c.phoneL}${dot(c.line)}${c.emailL}</div>
+      ${sites ? `<div style="font-size:12.5px;margin-top:2px">${sites}</div>` : ""}
+      ${social ? `<div style="margin-top:10px">${social}</div>` : ""}
+    </td></tr>`
+  );
+};
+
+export const generateMonogramTileTemplate = (data: SignatureFormData): string => {
+  const c = ctx(data);
+  const sites = c.siteLs.slice(0, 2).join(dot(c.line));
+  const social = socialIcons(c, 16, 9, 3);
+  return root(
+    c,
+    `<tr>
+      <td valign="top" style="padding:0 16px 0 0">${tile(c, 66)}</td>
+      <td valign="middle">
+        ${nameEl(c, 18)}
+        <div style="font-size:12.5px;color:${c.muted};margin:2px 0 8px">${c.position}</div>
+        <div style="font-size:12.5px;line-height:1.7">${c.phoneL}${dot(c.line)}${c.emailL}</div>
+        ${sites ? `<div style="font-size:12.5px;line-height:1.7">${sites}</div>` : ""}
+        ${social ? `<div style="margin-top:8px">${social}</div>` : ""}
+      </td>
+    </tr>`
+  );
+};
+
+export const generateSerifClassicTemplate = (data: SignatureFormData): string => {
+  const c = ctx(data);
+  const serif = "Georgia,'Times New Roman',Times,serif";
+  const sites = c.siteLs.slice(0, 2).join(dot(c.line));
+  const social = socialIcons(c, 15, 9, 3);
+  return root(
+    c,
+    `<tr><td style="border-top:1px solid ${c.line};border-bottom:1px solid ${c.line};padding:14px 2px">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+        <td valign="middle">
+          <div style="font-family:${serif};font-size:22px;line-height:1.2;font-weight:normal;color:${c.accent};letter-spacing:.3px">${c.name}</div>
+          <div style="font-family:${serif};font-size:14px;font-style:italic;color:${c.muted};margin:3px 0 10px">${c.position}</div>
+          <div style="font-size:12px;letter-spacing:.3px">${c.phoneL}${dot(c.line)}${c.emailL}</div>
+          ${sites ? `<div style="font-size:12px;margin-top:2px;letter-spacing:.3px">${sites}</div>` : ""}
+          ${social ? `<div style="margin-top:10px">${social}</div>` : ""}
+        </td>
+        ${c.img ? `<td valign="middle" align="right" style="padding-left:20px">${avatar(c, 72)}</td>` : ""}
+      </tr></table>
+    </td></tr>`
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/*  EXTRA PREMIUM TEMPLATES                                                    */
+/* -------------------------------------------------------------------------- */
+
+export const generateGradientEdgeTemplate = (data: SignatureFormData): string => {
+  const c = ctx(data);
+  const sites = (data.websites || []).filter(Boolean).slice(0, 2).map((s) => iconRow(c, ICONS.web, link(s, hostOf(s), c.text))).join("");
+  const social = socialIcons(c, 20, 10, 6);
+  const left = `<table role="presentation" cellpadding="0" cellspacing="0" border="0">${iconRow(c, ICONS.phone, c.phoneL)}${iconRow(c, ICONS.mail, c.emailL)}</table>`;
+  return root(
+    c,
+    `<tr><td height="6" bgcolor="${c.accent}" style="height:6px;font-size:0;line-height:0;background:${c.accent};background-image:linear-gradient(90deg,${c.accent},${tint(c.accent, 0.8)});border-radius:10px 10px 0 0">&nbsp;</td></tr>
+     <tr><td style="background:#ffffff;border:1px solid #e5e7eb;border-top:0;border-radius:0 0 10px 10px;padding:20px 24px">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+          <td valign="top" style="padding:0 20px 0 0">${avatar(c, 80)}</td>
+          <td valign="top">
+            ${nameEl(c, 22)}
+            <div style="font-size:12px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:${c.muted};margin:4px 0 12px">${c.position}</div>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+              <td valign="top" style="padding-right:26px">${left}</td>
+              <td valign="top"><table role="presentation" cellpadding="0" cellspacing="0" border="0">${sites}</table></td>
+            </tr></table>
+            ${social ? `<div style="margin-top:8px">${social}</div>` : ""}
+          </td>
+        </tr></table>
+     </td></tr>`
+  );
+};
+
+export const generatePillHeaderTemplate = (data: SignatureFormData): string => {
+  const c = ctx(data);
+  const social = socialBadges(c, 14, tint(c.accent, 0.9), 6);
+  return root(
+    c,
+    `<tr><td style="background:#ffffff;border:1px solid ${tint(c.accent, 0.8)};border-radius:14px;padding:20px 24px">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+          <td valign="middle" style="padding:0 18px 0 0">${avatar(c, 76, `3px solid ${tint(c.accent, 0.85)}`)}</td>
+          <td valign="middle">
+            ${nameEl(c, 22)}
+            <div style="margin-top:7px"><span style="display:inline-block;background:${c.accent};color:${c.onAccent};border-radius:20px;padding:3px 12px;font-size:10.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase">${c.position}</span></div>
+          </td>
+        </tr></table>
+        ${rule(tint(c.accent, 0.8), "1px", "16px 0 12px")}
+        ${iconRows(c, 2)}
+        ${social ? `<div style="margin-top:8px">${social}</div>` : ""}
+     </td></tr>`
+  );
+};
+
+export const generateMidnightSplitTemplate = (data: SignatureFormData): string => {
+  const c = ctx(data);
+  const hi = luminance(c.accent) < 0.3 ? "#c9a24a" : c.accent;
+  const social = socialIcons(c, 18, 10, 6);
+  return root(
+    c,
+    `<tr>
+      <td valign="middle" align="center" style="background:#0f172a;border-radius:14px 0 0 14px;padding:22px 24px;width:150px">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center"><tr><td>${avatar(c, 80, `2px solid ${hi}`)}</td></tr></table>
+        <div style="font-size:17px;line-height:1.25;font-weight:${c.weight};color:#ffffff;margin-top:12px;text-align:center">${c.name}</div>
+        <div style="font-size:10.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:${hi};margin-top:5px;text-align:center">${c.position}</div>
+      </td>
+      <td valign="middle" style="background:#ffffff;border:1px solid #e5e7eb;border-left:0;border-radius:0 14px 14px 0;padding:20px 26px">
+        ${iconRows(c, 2)}
+        ${social ? `<div style="margin-top:8px;padding-top:12px;border-top:1px solid ${c.line}">${social}</div>` : ""}
+      </td>
+    </tr>`
+  );
+};
+
+export const generateDuoToneTemplate = (data: SignatureFormData): string => {
+  const c = ctx(data);
+  const social = socialIcons(c, 18, 10, 6);
+  return root(
+    c,
+    `<tr>
+      <td valign="middle" style="background:${tint(c.accent, 0.93)};border-bottom:3px solid ${c.accent};border-radius:12px 0 0 12px;padding:22px 26px">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td>${avatar(c, 60)}</td></tr></table>
+        <div style="margin-top:12px">${nameEl(c, 20)}</div>
+        <div style="font-size:12px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:${c.muted};margin-top:4px">${c.position}</div>
+      </td>
+      <td valign="middle" style="background:#ffffff;border:1px solid ${tint(c.accent, 0.85)};border-left:0;border-bottom:3px solid ${c.accent};border-radius:0 12px 12px 0;padding:22px 26px">
+        ${labelRows(c, 2)}
+        ${social ? `<div style="margin-top:10px">${social}</div>` : ""}
+      </td>
+    </tr>`
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/*  EXTRA CORPORATE TEMPLATES                                                  */
+/* -------------------------------------------------------------------------- */
+
+export const generateCorporateStackedTemplate = (data: SignatureFormData): string => {
+  const c = ctx(data);
+  const sites = c.siteLs.slice(0, 2).join(dot(c.line));
+  const social = socialIcons(c, 17, 8, 6);
+  const center = (html: string) => `<table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center"><tr><td>${html}</td></tr></table>`;
+  return root(
+    c,
+    `<tr><td align="center" style="background:#ffffff;border:1px solid #e5e7eb;border-top:4px solid ${c.accent};border-radius:8px;padding:22px 32px;text-align:center">
+        ${center(companyMark(c, c.accent, 38))}
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:14px auto"><tr><td width="40" height="2" bgcolor="${c.line}" style="width:40px;height:2px;background:${c.line};font-size:0;line-height:0">&nbsp;</td></tr></table>
+        ${c.img ? `<div style="margin-bottom:10px">${center(avatar(c, 64))}</div>` : ""}
+        ${nameEl(c, 19)}
+        <div style="font-size:11.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:${c.muted};margin:3px 0 10px">${c.position}</div>
+        <div style="font-size:12.5px">${c.phoneL}${dot(c.line)}${c.emailL}</div>
+        ${sites ? `<div style="font-size:12.5px;margin-top:2px">${sites}</div>` : ""}
+        ${social ? `<div style="margin-top:12px">${center(social)}</div>` : ""}
+     </td></tr>`,
+    "text-align:center;"
+  );
+};
+
+export const generateCorporateCardTemplate = (data: SignatureFormData): string => {
+  const c = ctx(data);
+  const sites = (data.websites || []).filter(Boolean).slice(0, 2).map((s) => iconRow(c, ICONS.web, link(s, hostOf(s), c.text))).join("");
+  const social = socialIcons(c, 17, 9, 6);
+  return root(
+    c,
+    `<tr><td style="background:#ffffff;border:1px solid #e5e7eb;border-bottom:0;border-radius:10px 10px 0 0;padding:20px 24px 16px">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+          <td valign="middle" style="padding-right:18px">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+              <td valign="middle" style="padding:0 14px 0 0">${avatar(c, 62)}</td>
+              <td valign="middle">${nameEl(c, 19)}<div style="font-size:12.5px;color:${c.muted};margin-top:3px">${c.position}</div></td>
+            </tr></table>
+          </td>
+          <td valign="middle" align="right">${companyMark(c, c.accent, 34)}</td>
+        </tr></table>
+        ${rule(c.accent, "2px", "14px 0 12px")}
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+          <td valign="top" style="padding-right:28px"><table role="presentation" cellpadding="0" cellspacing="0" border="0">${iconRow(c, ICONS.phone, c.phoneL)}${iconRow(c, ICONS.mail, c.emailL)}</table></td>
+          ${sites ? `<td valign="top"><table role="presentation" cellpadding="0" cellspacing="0" border="0">${sites}</table></td>` : ""}
+        </tr></table>
+      </td></tr>
+      <tr><td style="background:${tint(c.accent, 0.94)};border:1px solid #e5e7eb;border-top:1px solid ${tint(c.accent, 0.8)};border-radius:0 0 10px 10px;padding:10px 24px">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+          <td valign="middle" style="font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:${c.muted}">${c.company || "Company Name"}</td>
+          <td valign="middle" align="right">${social}</td>
+        </tr></table>
+      </td></tr>`
+  );
+};
