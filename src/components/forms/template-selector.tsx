@@ -1,15 +1,15 @@
 "use client";
 
-import { UseFormReturn } from "react-hook-form";
-import { SignatureFormData, templateTypes, corporateTemplateTypes } from "@/lib/schemas";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
+import { SignatureFormData, templateTypes, corporateTemplateTypes } from "@/lib/schemas";
+import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Palette, Building2, Crown, Sparkles } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { UseFormReturn } from "react-hook-form";
 
 interface TemplateSelectorProps {
   form: UseFormReturn<SignatureFormData>;
@@ -40,9 +40,7 @@ export function TemplateSelector({ form }: TemplateSelectorProps) {
             <Palette className="w-5 h-5 text-primary" />
             Signature Templates
           </CardTitle>
-          <CardDescription>
-            Choose from our professionally designed templates
-          </CardDescription>
+          <CardDescription>Choose from our professionally designed templates</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Corporate Mode Toggle */}
@@ -58,10 +56,7 @@ export function TemplateSelector({ form }: TemplateSelectorProps) {
                       Corporate Mode
                     </FormLabel>
                     <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -83,47 +78,67 @@ export function TemplateSelector({ form }: TemplateSelectorProps) {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <h4 className="font-semibold text-green-600">Free Templates</h4>
-              <Badge variant="secondary" className="bg-green-100 text-green-700">3 Free</Badge>
+              <Badge variant="secondary" className="bg-green-100 text-green-700">
+                3 Free
+              </Badge>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
               {Object.entries(templateTypes)
                 .filter(([, template]) => template.isFree)
-                .map(([key, template]) => (
-                <motion.div
-                  key={key}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => handleTemplateSelect(key)}
-                    className={cn(
-                      "h-auto p-4 flex flex-col items-start gap-3 w-full transition-all duration-200 min-h-[140px]",
-                      selectedTemplate === key && !isCorporate
-                        ? "border-primary bg-primary/5 ring-2 ring-primary/20"
-                        : "hover:border-primary/50"
-                    )}
-                  >
-                    <div className="flex items-center justify-between w-full">
-                      <h5 className="font-medium text-left leading-tight">{template.name}</h5>
-                      <div className="flex gap-2">
-                        <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">Free</Badge>
-                        {selectedTemplate === key && !isCorporate && (
-                          <Badge className="text-xs">Selected</Badge>
+                .map(([key, template]) => {
+                  const isSelected = selectedTemplate === key && !isCorporate;
+                  return (
+                    <motion.div
+                      key={key}
+                      className={cn("relative", isSelected ? "z-10" : "z-0 hover:z-20")}
+                      whileHover={{ scale: 1.02, zIndex: 20 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => handleTemplateSelect(key)}
+                        className={cn(
+                          "h-auto p-4 flex flex-col items-start gap-2.5 w-full transition-all duration-200 min-h-[150px] whitespace-normal text-left",
+                          isSelected
+                            ? "border-primary bg-primary/5 ring-2 ring-primary/20 shadow-sm"
+                            : "hover:border-primary/50"
                         )}
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground text-left line-clamp-2 flex-1">
-                      {template.description}
-                    </p>
-                    <div className="w-full h-12 bg-gradient-to-br from-green-50 via-green-25 to-background border rounded text-xs flex items-center justify-center">
-                      <Sparkles className="w-4 h-4 opacity-50 text-green-600" />
-                    </div>
-                  </Button>
-                </motion.div>
-              ))}
+                      >
+                        {/* Top row: Category badge + Selected indicator */}
+                        <div className="flex items-center justify-between w-full min-h-[22px]">
+                          <Badge
+                            variant="outline"
+                            className="text-xs bg-green-50 text-green-700 border-green-200"
+                          >
+                            Free
+                          </Badge>
+                          {isSelected && (
+                            <Badge className="text-xs bg-primary text-primary-foreground">
+                              Selected
+                            </Badge>
+                          )}
+                        </div>
+
+                        {/* Title: Full width, always stable */}
+                        <h5 className="font-semibold text-sm leading-snug text-foreground text-left w-full">
+                          {template.name}
+                        </h5>
+
+                        {/* Description */}
+                        <p className="text-xs sm:text-sm text-muted-foreground text-left line-clamp-2 w-full flex-1">
+                          {template.description}
+                        </p>
+
+                        {/* Preview box */}
+                        <div className="w-full h-12 bg-gradient-to-br from-green-50 via-green-25 to-background border rounded text-xs flex items-center justify-center shrink-0">
+                          <Sparkles className="w-4 h-4 opacity-50 text-green-600" />
+                        </div>
+                      </Button>
+                    </motion.div>
+                  );
+                })}
             </div>
           </div>
 
@@ -133,45 +148,63 @@ export function TemplateSelector({ form }: TemplateSelectorProps) {
               <h4 className="font-semibold">Premium Templates</h4>
               <Badge variant="secondary">3 Premium</Badge>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
               {Object.entries(templateTypes)
                 .filter(([, template]) => !template.isFree)
-                .map(([key, template]) => (
-                <motion.div
-                  key={key}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => handleTemplateSelect(key)}
-                    className={cn(
-                      "h-auto p-4 flex flex-col items-start gap-3 w-full transition-all duration-200 min-h-[140px]",
-                      selectedTemplate === key && !isCorporate
-                        ? "border-primary bg-primary/5 ring-2 ring-primary/20"
-                        : "hover:border-primary/50"
-                    )}
-                  >
-                    <div className="flex items-center justify-between w-full">
-                      <h5 className="font-medium text-left leading-tight">{template.name}</h5>
-                      <div className="flex gap-2">
-                        <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200">Premium</Badge>
-                        {selectedTemplate === key && !isCorporate && (
-                          <Badge className="text-xs">Selected</Badge>
+                .map(([key, template]) => {
+                  const isSelected = selectedTemplate === key && !isCorporate;
+                  return (
+                    <motion.div
+                      key={key}
+                      className={cn("relative", isSelected ? "z-10" : "z-0 hover:z-20")}
+                      whileHover={{ scale: 1.02, zIndex: 20 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => handleTemplateSelect(key)}
+                        className={cn(
+                          "h-auto p-4 flex flex-col items-start gap-2.5 w-full transition-all duration-200 min-h-[150px] whitespace-normal text-left",
+                          isSelected
+                            ? "border-primary bg-primary/5 ring-2 ring-primary/20 shadow-sm"
+                            : "hover:border-primary/50"
                         )}
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground text-left line-clamp-2 flex-1">
-                      {template.description}
-                    </p>
-                    <div className="w-full h-12 bg-gradient-to-br from-amber-50 via-amber-25 to-background border rounded text-xs flex items-center justify-center">
-                      <Crown className="w-4 h-4 opacity-50 text-amber-600" />
-                    </div>
-                  </Button>
-                </motion.div>
-              ))}
+                      >
+                        {/* Top row: Category badge + Selected indicator */}
+                        <div className="flex items-center justify-between w-full min-h-[22px]">
+                          <Badge
+                            variant="outline"
+                            className="text-xs bg-amber-50 text-amber-700 border-amber-200"
+                          >
+                            Premium
+                          </Badge>
+                          {isSelected && (
+                            <Badge className="text-xs bg-primary text-primary-foreground">
+                              Selected
+                            </Badge>
+                          )}
+                        </div>
+
+                        {/* Title: Full width, always stable */}
+                        <h5 className="font-semibold text-sm leading-snug text-foreground text-left w-full">
+                          {template.name}
+                        </h5>
+
+                        {/* Description */}
+                        <p className="text-xs sm:text-sm text-muted-foreground text-left line-clamp-2 w-full flex-1">
+                          {template.description}
+                        </p>
+
+                        {/* Preview box */}
+                        <div className="w-full h-12 bg-gradient-to-br from-amber-50 via-amber-25 to-background border rounded text-xs flex items-center justify-center shrink-0">
+                          <Crown className="w-4 h-4 opacity-50 text-amber-600" />
+                        </div>
+                      </Button>
+                    </motion.div>
+                  );
+                })}
             </div>
           </div>
 
@@ -192,43 +225,64 @@ export function TemplateSelector({ form }: TemplateSelectorProps) {
                   </h4>
                   <Badge variant="secondary">Premium</Badge>
                 </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {Object.entries(corporateTemplateTypes).map(([key, template]) => (
-                    <motion.div
-                      key={key}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.2 }}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => handleCorporateTemplateSelect(key)}
-                        className={cn(
-                          "h-auto p-4 flex flex-col items-start gap-2 w-full transition-all duration-200",
-                          corporateTemplate === key
-                            ? "border-primary bg-primary/5 ring-2 ring-primary/20"
-                            : "hover:border-primary/50"
-                        )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {Object.entries(corporateTemplateTypes).map(([key, template]) => {
+                    const isSelected = corporateTemplate === key;
+                    return (
+                      <motion.div
+                        key={key}
+                        className={cn("relative", isSelected ? "z-10" : "z-0 hover:z-20")}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.2 }}
+                        whileHover={{ scale: 1.02, zIndex: 20 }}
+                        whileTap={{ scale: 0.98 }}
                       >
-                        <div className="flex items-center justify-between w-full">
-                          <h5 className="font-medium">{template.name}</h5>
-                          {corporateTemplate === key && (
-                            <Badge className="text-xs">Selected</Badge>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => handleCorporateTemplateSelect(key)}
+                          className={cn(
+                            "h-auto p-4 flex flex-col items-start gap-2.5 w-full transition-all duration-200 min-h-[150px] whitespace-normal text-left",
+                            isSelected
+                              ? "border-primary bg-primary/5 ring-2 ring-primary/20 shadow-sm"
+                              : "hover:border-primary/50"
                           )}
-                        </div>
-                        <p className="text-sm text-muted-foreground text-left">
-                          {template.description}
-                        </p>
-                        <div className="w-full h-16 bg-gradient-to-br from-blue-50 via-slate-50 to-gray-100 border rounded text-xs flex items-center justify-center">
-                          <Building2 className="w-4 h-4 opacity-50" />
-                        </div>
-                      </Button>
-                    </motion.div>
-                  ))}
+                        >
+                          {/* Top row: Category badge + Selected indicator */}
+                          <div className="flex items-center justify-between w-full min-h-[22px]">
+                            <Badge
+                              variant="outline"
+                              className="text-xs bg-blue-50 text-blue-700 border-blue-200"
+                            >
+                              Corporate
+                            </Badge>
+                            {isSelected && (
+                              <Badge className="text-xs bg-primary text-primary-foreground">
+                                Selected
+                              </Badge>
+                            )}
+                          </div>
+
+                          {/* Title: Full width, always stable */}
+                          <h5 className="font-semibold text-sm leading-snug text-foreground text-left w-full">
+                            {template.name}
+                          </h5>
+
+                          {/* Description */}
+                          <p className="text-xs sm:text-sm text-muted-foreground text-left line-clamp-2 w-full flex-1">
+                            {template.description}
+                          </p>
+
+                          {/* Preview box */}
+                          <div className="w-full h-16 bg-gradient-to-br from-blue-50 via-slate-50 to-gray-100 border rounded text-xs flex items-center justify-center shrink-0">
+                            <Building2 className="w-4 h-4 opacity-50 text-blue-600" />
+                          </div>
+                        </Button>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               </motion.div>
             )}
@@ -237,7 +291,7 @@ export function TemplateSelector({ form }: TemplateSelectorProps) {
           {/* Template Info */}
           <div className="text-xs text-muted-foreground bg-muted/30 rounded-lg p-3">
             <p>
-              <strong>💡 Tip:</strong> Corporate templates include company logo integration and 
+              <strong>💡 Tip:</strong> Corporate templates include company logo integration and
               professional branding options. Switch between modes to see all available templates.
             </p>
           </div>
