@@ -16,8 +16,14 @@ import {
   generateModernTemplate,
   generateCreativeTemplate,
   generateProfessionalTemplate,
+  generateAccentBarTemplate,
+  generateCompactLineTemplate,
+  generateSoftCardTemplate,
+  generateExecutiveDarkTemplate,
   generateCorporateCleanTemplate,
   generateCorporateBrandedTemplate,
+  generateCorporateSplitTemplate,
+  generateCorporateExecutiveTemplate,
 } from "@/lib/template-generators";
 
 interface SignaturePreviewProps {
@@ -65,6 +71,10 @@ export function SignaturePreview({ data, formErrors }: SignaturePreviewProps) {
           return generateCorporateCleanTemplate(data);
         case "corporate-branded":
           return generateCorporateBrandedTemplate(data);
+        case "corporate-split":
+          return generateCorporateSplitTemplate(data);
+        case "corporate-executive":
+          return generateCorporateExecutiveTemplate(data);
         default:
           return generateCorporateCleanTemplate(data);
       }
@@ -78,6 +88,14 @@ export function SignaturePreview({ data, formErrors }: SignaturePreviewProps) {
         return generateClassicLeftImageTemplate(data);
       case "stacked-centered":
         return generateStackedCenteredTemplate(data);
+      case "accent-bar":
+        return generateAccentBarTemplate(data);
+      case "compact-line":
+        return generateCompactLineTemplate(data);
+      case "soft-card":
+        return generateSoftCardTemplate(data);
+      case "executive-dark":
+        return generateExecutiveDarkTemplate(data);
       case "modern":
         return generateModernTemplate(data);
       case "creative":

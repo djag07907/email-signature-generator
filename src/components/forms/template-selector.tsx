@@ -79,7 +79,7 @@ export function TemplateSelector({ form }: TemplateSelectorProps) {
             <div className="flex items-center gap-2">
               <h4 className="font-semibold text-green-600">Free Templates</h4>
               <Badge variant="secondary" className="bg-green-100 text-green-700">
-                3 Free
+                {Object.values(templateTypes).filter((t) => t.isFree).length} Free
               </Badge>
             </div>
 
@@ -146,7 +146,7 @@ export function TemplateSelector({ form }: TemplateSelectorProps) {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <h4 className="font-semibold">Premium Templates</h4>
-              <Badge variant="secondary">3 Premium</Badge>
+              <Badge variant="secondary">{Object.values(templateTypes).filter((t) => !t.isFree).length} Premium</Badge>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">

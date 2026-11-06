@@ -36,9 +36,12 @@ export const socialLinksSchema = z.object({
 });
 
 export const templateSchema = z.object({
-  selectedTemplate: z.enum(["minimalist-white", "classic-left-image", "stacked-centered", "modern", "creative", "professional"]),
+  selectedTemplate: z.enum([
+    "minimalist-white", "classic-left-image", "stacked-centered", "accent-bar", "compact-line", "soft-card",
+    "modern", "creative", "professional", "executive-dark",
+  ]),
   isCorporate: z.boolean(),
-  corporateTemplate: z.enum(["corporate-clean", "corporate-branded"]).optional(),
+  corporateTemplate: z.enum(["corporate-clean", "corporate-branded", "corporate-split", "corporate-executive"]).optional(),
 });
 
 export const styleSchema = z.object({
@@ -68,57 +71,95 @@ export type SignatureFormData = z.infer<typeof signatureFormSchema>;
 export const templateTypes = {
   "minimalist-white": {
     name: "Minimalist White",
-    description: "Clean text-focused design with small image accent",
+    description: "Clean, text-first layout with a small photo accent",
     preview: "minimalist-white-preview",
     isFree: true,
     maxSocialLinks: 3
   },
   "classic-left-image": {
     name: "Classic Left-Image",
-    description: "Professional layout with photo/logo on left, details on right",
+    description: "Photo on the left, details on the right behind an accent line",
     preview: "classic-left-image-preview",
     isFree: true,
     maxSocialLinks: 3
   },
   "stacked-centered": {
     name: "Stacked Centered",
-    description: "Photo on top with centered information below",
+    description: "Photo on top with centered, balanced information below",
     preview: "stacked-centered-preview",
+    isFree: true,
+    maxSocialLinks: 3
+  },
+  "accent-bar": {
+    name: "Accent Bar",
+    description: "Bold vertical accent bar with crisp typographic hierarchy",
+    preview: "accent-bar-preview",
+    isFree: true,
+    maxSocialLinks: 3
+  },
+  "compact-line": {
+    name: "Compact Line",
+    description: "Ultra-slim two-line signature, ideal for quick replies",
+    preview: "compact-line-preview",
+    isFree: true,
+    maxSocialLinks: 3
+  },
+  "soft-card": {
+    name: "Soft Card",
+    description: "Tinted rounded card with photo and tidy contact rows",
+    preview: "soft-card-preview",
     isFree: true,
     maxSocialLinks: 3
   },
   modern: {
     name: "Modern",
-    description: "Clean and contemporary design with gradients",
+    description: "Photo ring, gradient divider and icon-led contact details",
     preview: "modern-preview",
     isFree: false,
-    maxSocialLinks: 10
+    maxSocialLinks: 6
   },
   creative: {
     name: "Creative",
-    description: "Bold and artistic layout",
+    description: "Bold color header with photo and pill-style contact chips",
     preview: "creative-preview",
     isFree: false,
-    maxSocialLinks: 10
+    maxSocialLinks: 6
   },
   professional: {
     name: "Professional",
-    description: "Formal business style",
+    description: "Brand-color sidebar with photo and structured details",
     preview: "professional-preview",
     isFree: false,
-    maxSocialLinks: 10
+    maxSocialLinks: 6
+  },
+  "executive-dark": {
+    name: "Executive Dark",
+    description: "Elegant dark card with accent highlights for a premium feel",
+    preview: "executive-dark-preview",
+    isFree: false,
+    maxSocialLinks: 6
   }
 } as const;
 
 export const corporateTemplateTypes = {
   "corporate-clean": {
     name: "Corporate Clean",
-    description: "Clean corporate design with company branding",
+    description: "Company header with logo, then a clean personal block",
     preview: "corporate-clean-preview"
   },
   "corporate-branded": {
     name: "Corporate Branded",
-    description: "Prominent company logo with brand colors",
+    description: "Full brand-color banner with logo and footer links",
     preview: "corporate-branded-preview"
+  },
+  "corporate-split": {
+    name: "Corporate Split",
+    description: "Two columns: company identity left, your details right",
+    preview: "corporate-split-preview"
+  },
+  "corporate-executive": {
+    name: "Corporate Executive",
+    description: "Executive layout with a branded footer bar and social badges",
+    preview: "corporate-executive-preview"
   }
 } as const;
